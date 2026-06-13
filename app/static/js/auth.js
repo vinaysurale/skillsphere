@@ -47,7 +47,11 @@ async function handleSignup(e) {
             localStorage.setItem('token', token);
             
             // Sync with backend by fetching profile (which will auto-register in SQLite)
-            await apiFetch('/api/auth/me');
+            try {
+                await apiFetch('/api/auth/me');
+            } catch (err) {
+                console.log('Profile fetch failed, user may need to sync manually');
+            }
             
             showToast('Account created! Welcome to SkillSphere!', 'success');
             setTimeout(() => window.location.href = '/profile', 800);
@@ -63,7 +67,7 @@ async function handleSignup(e) {
             setTimeout(() => window.location.href = '/profile', 800);
         }
     } catch (err) {
-        showToast(err.message, 'error');
+        showToast(err.message || 'Signup failed. Please try again.', 'error');
         btn.disabled = false;
         btn.textContent = 'Create Account';
     }
@@ -86,7 +90,11 @@ async function handleLogin(e) {
             localStorage.setItem('token', token);
             
             // Sync with backend by fetching profile (which will auto-register/retrieve user)
-            await apiFetch('/api/auth/me');
+            try {
+                await apiFetch('/api/auth/me');
+            } catch (err) {
+                console.log('Profile fetch failed, user may need to sync manually');
+            }
 
             showToast('Welcome back!', 'success');
             setTimeout(() => window.location.href = '/dashboard', 800);
@@ -102,7 +110,7 @@ async function handleLogin(e) {
             setTimeout(() => window.location.href = '/dashboard', 800);
         }
     } catch (err) {
-        showToast(err.message, 'error');
+        showToast(err.message || 'Login failed. Please check your credentials.', 'error');
         btn.disabled = false;
         btn.textContent = 'Sign In';
     }

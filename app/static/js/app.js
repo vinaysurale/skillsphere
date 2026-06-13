@@ -31,7 +31,9 @@ async function getUser() {
     try {
         const data = await apiFetch('/api/auth/me');
         return data.user;
-    } catch {
+    } catch (err) {
+        // User not authenticated - this is normal for logged out users
+        // Don't show error, just return null
         return null;
     }
 }

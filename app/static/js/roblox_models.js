@@ -74,10 +74,14 @@ function init3DAvatar(container) {
     let modelObjects = {};
 
     // Build Character Avatar
-    const skinMat = new THREE.MeshLambertMaterial({ color: 0xffd369, flatShading: true }); // Yellow skin
-    const shirtMat = new THREE.MeshLambertMaterial({ color: 0x0f52ba, flatShading: true }); // Blue shirt
-    const pantsMat = new THREE.MeshLambertMaterial({ color: 0x138808, flatShading: true }); // Green pants
-    const hatMat = new THREE.MeshLambertMaterial({ color: 0x111111, flatShading: true }); // Hat
+    const skinMat = new THREE.MeshLambertMaterial({ color: 0xffd369 }); // Yellow skin
+    skinMat.flatShading = true;
+    const shirtMat = new THREE.MeshLambertMaterial({ color: 0x0f52ba }); // Blue shirt
+    shirtMat.flatShading = true;
+    const pantsMat = new THREE.MeshLambertMaterial({ color: 0x138808 }); // Green pants
+    pantsMat.flatShading = true;
+    const hatMat = new THREE.MeshLambertMaterial({ color: 0x111111 }); // Hat
+    hatMat.flatShading = true;
     const faceMat = new THREE.MeshBasicMaterial({ color: 0x111111 });
 
     // Torso
@@ -397,9 +401,12 @@ function init3DModel(container, modelType) {
 
 // Build Rocket Model
 function buildRocket(group) {
-    const bodyMat = new THREE.MeshLambertMaterial({ color: 0xe22030, flatShading: true });
-    const windowMat = new THREE.MeshLambertMaterial({ color: 0x3b82f6, flatShading: true });
-    const finMat = new THREE.MeshLambertMaterial({ color: 0x111111, flatShading: true });
+    const bodyMat = new THREE.MeshLambertMaterial({ color: 0xe22030 });
+    bodyMat.flatShading = true;
+    const windowMat = new THREE.MeshLambertMaterial({ color: 0x3b82f6 });
+    windowMat.flatShading = true;
+    const finMat = new THREE.MeshLambertMaterial({ color: 0x111111 });
+    finMat.flatShading = true;
 
     // Body
     const body = new THREE.Mesh(new THREE.CylinderGeometry(0.6, 0.6, 3, 6), bodyMat);
@@ -436,11 +443,11 @@ function buildRocket(group) {
 // Build Diamond Model
 function buildDiamond(group) {
     const diamondMat = new THREE.MeshLambertMaterial({ 
-        color: 0x3b82f6, 
-        flatShading: true,
+        color: 0x3b82f6,
         emissive: 0x1e40af,
         emissiveIntensity: 0.3
     });
+    diamondMat.flatShading = true;
 
     const topPyramid = new THREE.Mesh(new THREE.ConeGeometry(1.2, 1.5, 6), diamondMat);
     topPyramid.position.y = 0.75;
@@ -459,11 +466,11 @@ function buildDiamond(group) {
 // Build Portal Model
 function buildPortal(group) {
     const portalMat = new THREE.MeshLambertMaterial({ 
-        color: 0x10b981, 
-        flatShading: true,
+        color: 0x10b981,
         emissive: 0x059669,
         emissiveIntensity: 0.4
     });
+    portalMat.flatShading = true;
 
     // Outer ring
     const outerRing = new THREE.Mesh(
@@ -473,9 +480,11 @@ function buildPortal(group) {
     group.add(outerRing);
 
     // Inner ring
+    const innerRingMat = new THREE.MeshLambertMaterial({ color: 0xe22030 });
+    innerRingMat.flatShading = true;
     const innerRing = new THREE.Mesh(
         new THREE.TorusGeometry(1.0, 0.15, 6, 12),
-        new THREE.MeshLambertMaterial({ color: 0xe22030, flatShading: true })
+        innerRingMat
     );
     group.add(innerRing);
 
@@ -488,9 +497,11 @@ function buildPortal(group) {
 
     // Decorative cubes
     for (let i = 0; i < 6; i++) {
+        const cubeMat = new THREE.MeshLambertMaterial({ color: 0xf59e0b });
+        cubeMat.flatShading = true;
         const cube = new THREE.Mesh(
             new THREE.BoxGeometry(0.15, 0.15, 0.15),
-            new THREE.MeshLambertMaterial({ color: 0xf59e0b })
+            cubeMat
         );
         const angle = (i * Math.PI * 2) / 6;
         cube.position.x = Math.cos(angle) * 1.5;

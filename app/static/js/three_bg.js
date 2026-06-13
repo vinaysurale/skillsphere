@@ -57,12 +57,15 @@ document.addEventListener('DOMContentLoaded', () => {
     ];
 
     // Switching to MeshLambertMaterial with stronger colors
-    const materials = colors.map(color => new THREE.MeshLambertMaterial({
-        color: color,
-        flatShading: true,
-        emissive: color,
-        emissiveIntensity: 0.1
-    }));
+    const materials = colors.map(color => {
+        const mat = new THREE.MeshLambertMaterial({
+            color: color,
+            emissive: color,
+            emissiveIntensity: 0.1
+        });
+        mat.flatShading = true;
+        return mat;
+    });
 
     for (let i = 0; i < blockCount; i++) {
         const geom = geometries[Math.floor(Math.random() * geometries.length)];
