@@ -40,19 +40,30 @@ async def analyze_github_profile(username: str) -> list[str]:
         "User-Agent": "SkillSphere-AI-App"
     }
     
+    from app.config import settings
+    if settings.GITHUB_TOKEN:
+        headers["Authorization"] = f"token {settings.GITHUB_TOKEN}"
+    
     try:
         async with httpx.AsyncClient() as client:
             response = await client.get(url, headers=headers, timeout=10.0)
             if response.status_code == 404:
                 raise ValueError("GitHub user not found")
+            elif response.status_code == 403:
+                # Often rate-limit or authorization error
+                err_msg = response.text.lower()
+                if "rate limit" in err_msg or "rate_limit" in err_msg:
+                    raise ValueError("GitHub API rate limit exceeded. Please try again later or configure a GITHUB_TOKEN.")
+                else:
+                    raise ValueError("Access to GitHub API was forbidden. Please verify your username or token.")
             elif response.status_code != 200:
                 logger.error(f"GitHub API error: Status {response.status_code} - {response.text}")
-                raise ValueError("Could not connect to GitHub API")
+                raise ValueError(f"Could not connect to GitHub API (Status {response.status_code})")
                 
             repos = response.json()
             if not isinstance(repos, list):
                 return []
-                
+            
             matched_skills = set()
             
             for repo in repos:

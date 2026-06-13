@@ -27,7 +27,8 @@ class Settings(BaseSettings):
     FIREBASE_MESSAGING_SENDER_ID: str = os.getenv("FIREBASE_MESSAGING_SENDER_ID", "")
     FIREBASE_APP_ID: str = os.getenv("FIREBASE_APP_ID", "")
 
-
+    # GitHub Config
+    GITHUB_TOKEN: str = os.getenv("GITHUB_TOKEN", "")
 
     class Config:
         env_file = ".env"
