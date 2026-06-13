@@ -18,21 +18,21 @@ async def lifespan(app: FastAPI):
     except Exception as e:
         print(f"⚠️ Warning creating tables: {e}")
     
-    # Only auto-seed in development, not on production (Render, etc)
-    is_production = settings.ENVIRONMENT != "development"
-    if not is_production:
-        try:
-            from app.database import SessionLocal
-            from app.models.skill import Skill
-            db = SessionLocal()
-            if db.query(Skill).count() == 0:
-                db.close()
-                from seed_data import seed
-                seed()
-            else:
-                db.close()
-        except Exception as e:
-            print(f"⚠️ Warning seeding database: {e}")
+    # Always auto-seed if the database is empty
+    # (Render uses ephemeral storage, so SQLite gets wiped on every deploy)
+    try:
+        from app.database import SessionLocal
+        from app.models.skill import Skill
+        db = SessionLocal()
+        if db.query(Skill).count() == 0:
+            db.close()
+            from seed_data import seed
+            seed()
+            print("✅ Database seeded successfully")
+        else:
+            db.close()
+    except Exception as e:
+        print(f"⚠️ Warning seeding database: {e}")
     
     yield
 

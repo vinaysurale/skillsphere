@@ -1,6 +1,6 @@
 from fastapi import APIRouter, Depends, HTTPException, Response, Request
 from sqlalchemy.orm import Session
-from pydantic import BaseModel, EmailStr
+from pydantic import BaseModel
 from app.database import get_db
 from app.models.user import User
 from app.services.auth_service import (
@@ -9,8 +9,11 @@ from app.services.auth_service import (
     create_access_token,
     decode_access_token,
 )
-from app.services.firebase import verify_firebase_token
+import firebase_admin
+from firebase_admin import auth as firebase_auth
+import logging
 
+logger = logging.getLogger(__name__)
 
 router = APIRouter(prefix="/api/auth", tags=["Authentication"])
 
@@ -40,9 +43,12 @@ class ProfileUpdateRequest(BaseModel):
 # ─── Helpers ──────────────────────────────────────────────────────────
 
 def get_current_user(request: Request, db: Session = Depends(get_db)) -> User:
-    """Extract and validate the current user from the JWT cookie or header."""
-    # Check both cookie names (access_token for local JWT, firebase_token for Firebase)
-    token = request.cookies.get("access_token") or request.cookies.get("firebase_token")
+    """Extract and validate the current user from Firebase token or JWT cookie/header."""
+    # Get token from cookies or Authorization header
+    token = (
+        request.cookies.get("access_token")
+        or request.cookies.get("firebase_token")
+    )
     if not token:
         auth_header = request.headers.get("Authorization", "")
         if auth_header.startswith("Bearer "):
@@ -51,24 +57,42 @@ def get_current_user(request: Request, db: Session = Depends(get_db)) -> User:
     if not token:
         raise HTTPException(status_code=401, detail="Not authenticated")
 
-    # 1. Try Firebase Auth Verification first
-    firebase_payload = verify_firebase_token(token)
-    if firebase_payload:
-        email = firebase_payload.get("email")
-        if email:
-            user = db.query(User).filter(User.email == email).first()
-            if not user:
-                # Auto-register Firebase user in local SQLite DB
-                user = User(
-                    name=firebase_payload.get("name", email.split("@")[0]),
-                    email=email,
-                    auth_provider="firebase",
-                    avatar_url=firebase_payload.get("picture", "")
-                )
-                db.add(user)
-                db.commit()
-                db.refresh(user)
-            return user
+    # 1. Try Firebase Auth Verification first (using firebase_admin directly)
+    if firebase_admin._apps:
+        try:
+            decoded_token = firebase_auth.verify_id_token(token)
+            uid = decoded_token.get("uid")
+            email = decoded_token.get("email")
+            name = decoded_token.get("name") or decoded_token.get("display_name") or (email.split("@")[0] if email else "User")
+
+            if uid and email:
+                # Look up by Firebase UID first, then by email
+                user = db.query(User).filter(User.id == uid).first()
+                if not user:
+                    user = db.query(User).filter(User.email == email).first()
+                    if user:
+                        # Update existing user's ID to Firebase UID
+                        user.id = uid
+                        db.commit()
+                        db.refresh(user)
+
+                if not user:
+                    # Auto-create user in SQLite with Firebase UID
+                    user = User(
+                        id=uid,
+                        name=name,
+                        email=email,
+                        auth_provider="firebase",
+                        avatar_url=decoded_token.get("picture", ""),
+                    )
+                    db.add(user)
+                    db.commit()
+                    db.refresh(user)
+                    logger.info(f"Auto-created SQLite user for Firebase UID: {uid}")
+
+                return user
+        except Exception as e:
+            logger.warning(f"Firebase token verification failed: {e}")
 
     # 2. Fallback to Local JWT Auth
     payload = decode_access_token(token)
