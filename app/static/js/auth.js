@@ -4,6 +4,7 @@
 
 // Initialize Firebase
 let firebaseAuth = null;
+let firebaseDatabase = null;
 let firebaseInitialized = false;
 
 async function initFirebase() {
@@ -13,8 +14,9 @@ async function initFirebase() {
             if (typeof firebase !== 'undefined') {
                 firebase.initializeApp(config);
                 firebaseAuth = firebase.auth();
+                firebaseDatabase = firebase.database(); // Initialize Realtime Database
                 firebaseInitialized = true;
-                console.log("Firebase initialized successfully");
+                console.log("Firebase Auth & Realtime Database initialized successfully");
             }
         }
     } catch (err) {
