@@ -7,7 +7,7 @@ import os
 
 from app.config import settings
 from app.database import create_tables
-from app.routers import auth, skills, portfolio, gap_engine, recommendations, market_index, simulator
+from app.routers import auth_firebase, skills, portfolio, gap_engine, recommendations, market_index, simulator
 
 
 @asynccontextmanager
@@ -41,7 +41,7 @@ app.mount("/static", StaticFiles(directory=static_dir), name="static")
 templates = Jinja2Templates(directory=templates_dir)
 
 # ─── API Routers ──────────────────────────────────────────────────────
-app.include_router(auth.router)
+app.include_router(auth_firebase.router)
 app.include_router(skills.router)
 app.include_router(portfolio.router)
 app.include_router(gap_engine.router)

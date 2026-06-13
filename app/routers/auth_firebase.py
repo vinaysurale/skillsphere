@@ -5,6 +5,7 @@ Replaces SQLAlchemy auth with Firebase Auth + Realtime Database
 from fastapi import APIRouter, Depends, HTTPException, status, Header, Request, Response
 from pydantic import BaseModel, EmailStr
 from typing import Optional
+from firebase_admin import auth
 from app.services.firebase_auth_service import FirebaseAuthService
 from app.services.firebase_db import UserDB
 
@@ -207,9 +208,54 @@ def sync_oauth_user(data: FirebaseSyncRequest, response: Response):
 
 
 @router.get("/me")
-def get_me(user: dict = Depends(get_current_user)):
-    """Get the current authenticated user profile."""
-    return {"user": user}
+def get_me(request: Request, response: Response):
+    """Get the current authenticated user profile. Auto-creates user if doesn't exist."""
+    token = get_firebase_token(request)
+    
+    if not token:
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail="Not authenticated. Please provide Firebase ID token."
+        )
+    
+    try:
+        # Verify token
+        decoded_token = FirebaseAuthService.verify_id_token(token)
+        uid = decoded_token['uid']
+        
+        # Try to get user from database
+        user = UserDB.get_by_id(uid)
+        
+        # If user doesn't exist, create them from Firebase Auth data
+        if not user:
+            firebase_user = auth.get_user(uid)
+            user_data = {
+                'id': uid,
+                'email': firebase_user.email,
+                'name': firebase_user.display_name or firebase_user.email.split('@')[0],
+                'auth_provider': 'firebase',
+                'avatar_url': firebase_user.photo_url or ''
+            }
+            user = UserDB.create(user_data)
+        
+        # Set cookie if using header auth
+        if not request.cookies.get("firebase_token"):
+            response.set_cookie(
+                key="firebase_token",
+                value=token,
+                httponly=True,
+                samesite="lax",
+                max_age=60 * 60,
+            )
+        
+        return {"user": user}
+    except HTTPException as e:
+        raise e
+    except Exception as e:
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail=f"Authentication failed: {str(e)}"
+        )
 
 
 @router.put("/profile")
