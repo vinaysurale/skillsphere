@@ -8,6 +8,7 @@ load_dotenv()
 class Settings(BaseSettings):
     APP_NAME: str = "SkillSphere AI"
     APP_VERSION: str = "1.0.0"
+    ENVIRONMENT: str = os.getenv("ENVIRONMENT", "development")
     SECRET_KEY: str = os.getenv("SECRET_KEY", "skillsphere-dev-secret-key")
     DATABASE_URL: str = os.getenv("DATABASE_URL", "sqlite:///./skillsphere.db")
     GEMINI_API_KEY: str = os.getenv("GEMINI_API_KEY", "")

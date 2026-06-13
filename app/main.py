@@ -12,18 +12,28 @@ from app.routers import auth_firebase, skills, portfolio, gap_engine, recommenda
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
-    """Create tables on startup."""
-    create_tables()
-    # Auto-seed if database is empty
-    from app.database import SessionLocal
-    from app.models.skill import Skill
-    db = SessionLocal()
-    if db.query(Skill).count() == 0:
-        db.close()
-        from seed_data import seed
-        seed()
-    else:
-        db.close()
+    """Initialize app on startup."""
+    try:
+        create_tables()
+    except Exception as e:
+        print(f"⚠️ Warning creating tables: {e}")
+    
+    # Only auto-seed in development, not on production (Render, etc)
+    is_production = settings.ENVIRONMENT != "development"
+    if not is_production:
+        try:
+            from app.database import SessionLocal
+            from app.models.skill import Skill
+            db = SessionLocal()
+            if db.query(Skill).count() == 0:
+                db.close()
+                from seed_data import seed
+                seed()
+            else:
+                db.close()
+        except Exception as e:
+            print(f"⚠️ Warning seeding database: {e}")
+    
     yield
 
 
