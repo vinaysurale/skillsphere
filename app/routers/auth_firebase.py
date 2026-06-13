@@ -223,10 +223,10 @@ def get_me(request: Request, response: Response):
         decoded_token = FirebaseAuthService.verify_id_token(token)
         uid = decoded_token['uid']
         
-        # Try to get user from database
+        # Try to get user from Firebase RTDB
         user = UserDB.get_by_id(uid)
         
-        # If user doesn't exist, create them from Firebase Auth data
+        # If user doesn't exist in Firebase RTDB, create them
         if not user:
             firebase_user = auth.get_user(uid)
             user_data = {
@@ -238,7 +238,50 @@ def get_me(request: Request, response: Response):
             }
             user = UserDB.create(user_data)
         
-        # Set cookie if using header auth
+        # ── Also ensure user exists in SQLite (for data endpoints) ──
+        try:
+            from app.database import SessionLocal
+            from app.models.user import User as SQLUser
+            from app.services.auth_service import create_access_token
+            
+            db = SessionLocal()
+            try:
+                sql_user = db.query(SQLUser).filter(SQLUser.id == uid).first()
+                if not sql_user:
+                    # Also check by email
+                    sql_user = db.query(SQLUser).filter(SQLUser.email == user.get('email', '')).first()
+                    if sql_user:
+                        # Update existing user's ID to Firebase UID
+                        sql_user.id = uid
+                        sql_user.name = user.get('name', sql_user.name)
+                        db.commit()
+                    else:
+                        # Create new user in SQLite
+                        sql_user = SQLUser(
+                            id=uid,
+                            name=user.get('name', 'User'),
+                            email=user.get('email', ''),
+                            auth_provider='firebase',
+                            avatar_url=user.get('avatar_url', ''),
+                        )
+                        db.add(sql_user)
+                        db.commit()
+                
+                # Generate local JWT and set as cookie for data endpoints
+                jwt_token = create_access_token({"sub": uid})
+                response.set_cookie(
+                    key="access_token",
+                    value=jwt_token,
+                    httponly=True,
+                    samesite="lax",
+                    max_age=60 * 60 * 24 * 7,  # 7 days
+                )
+            finally:
+                db.close()
+        except Exception as e:
+            print(f"⚠️ SQLite user sync warning: {e}")
+        
+        # Set firebase_token cookie if using header auth
         if not request.cookies.get("firebase_token"):
             response.set_cookie(
                 key="firebase_token",

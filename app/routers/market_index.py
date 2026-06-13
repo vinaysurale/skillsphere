@@ -28,7 +28,7 @@ def get_market_indexes(db: Session = Depends(get_db)):
     return {"indexes": indexes}
 
 
-@router.get("/trends/{category}")
+@router.get("/trends/{category:path}")
 def get_trends(
     category: str,
     days: int = Query(default=30, ge=7, le=365),

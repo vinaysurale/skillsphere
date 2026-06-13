@@ -43,27 +43,36 @@ class ProfileUpdateRequest(BaseModel):
 # ─── Helpers ──────────────────────────────────────────────────────────
 
 def get_current_user(request: Request, db: Session = Depends(get_db)) -> User:
-    """Extract and validate the current user from Firebase token or JWT cookie/header."""
-    # Get token from cookies or Authorization header
-    token = (
-        request.cookies.get("access_token")
-        or request.cookies.get("firebase_token")
-    )
-    if not token:
+    """Extract and validate the current user from local JWT cookie or Firebase token."""
+    
+    # ── Path 1: Try local JWT from access_token cookie (fast, reliable) ──
+    access_token = request.cookies.get("access_token")
+    if access_token:
+        payload = decode_access_token(access_token)
+        if payload:
+            user_id = payload.get("sub")
+            if user_id:
+                user = db.query(User).filter(User.id == user_id).first()
+                if user:
+                    return user
+
+    # ── Path 2: Try Firebase token (from cookie or Authorization header) ──
+    firebase_token = request.cookies.get("firebase_token")
+    if not firebase_token:
         auth_header = request.headers.get("Authorization", "")
         if auth_header.startswith("Bearer "):
-            token = auth_header[7:]
+            firebase_token = auth_header[7:]
 
-    if not token:
-        raise HTTPException(status_code=401, detail="Not authenticated")
-
-    # 1. Try Firebase Auth Verification first (using firebase_admin directly)
-    if firebase_admin._apps:
+    if firebase_token and firebase_admin._apps:
         try:
-            decoded_token = firebase_auth.verify_id_token(token)
+            decoded_token = firebase_auth.verify_id_token(firebase_token)
             uid = decoded_token.get("uid")
             email = decoded_token.get("email")
-            name = decoded_token.get("name") or decoded_token.get("display_name") or (email.split("@")[0] if email else "User")
+            name = (
+                decoded_token.get("name")
+                or decoded_token.get("display_name")
+                or (email.split("@")[0] if email else "User")
+            )
 
             if uid and email:
                 # Look up by Firebase UID first, then by email
@@ -71,13 +80,12 @@ def get_current_user(request: Request, db: Session = Depends(get_db)) -> User:
                 if not user:
                     user = db.query(User).filter(User.email == email).first()
                     if user:
-                        # Update existing user's ID to Firebase UID
                         user.id = uid
                         db.commit()
                         db.refresh(user)
 
                 if not user:
-                    # Auto-create user in SQLite with Firebase UID
+                    # Auto-create user in SQLite
                     user = User(
                         id=uid,
                         name=name,
@@ -94,20 +102,10 @@ def get_current_user(request: Request, db: Session = Depends(get_db)) -> User:
         except Exception as e:
             logger.warning(f"Firebase token verification failed: {e}")
 
-    # 2. Fallback to Local JWT Auth
-    payload = decode_access_token(token)
-    if not payload:
-        raise HTTPException(status_code=401, detail="Invalid or expired token")
-
-    user_id = payload.get("sub")
-    if not user_id:
-        raise HTTPException(status_code=401, detail="Invalid token payload")
-
-    user = db.query(User).filter(User.id == user_id).first()
-    if not user:
-        raise HTTPException(status_code=401, detail="User not found")
-
-    return user
+    # No valid authentication found
+    if not access_token and not firebase_token:
+        raise HTTPException(status_code=401, detail="Not authenticated")
+    raise HTTPException(status_code=401, detail="Invalid or expired token")
 
 
 
