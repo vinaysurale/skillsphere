@@ -41,7 +41,8 @@ class ProfileUpdateRequest(BaseModel):
 
 def get_current_user(request: Request, db: Session = Depends(get_db)) -> User:
     """Extract and validate the current user from the JWT cookie or header."""
-    token = request.cookies.get("access_token")
+    # Check both cookie names (access_token for local JWT, firebase_token for Firebase)
+    token = request.cookies.get("access_token") or request.cookies.get("firebase_token")
     if not token:
         auth_header = request.headers.get("Authorization", "")
         if auth_header.startswith("Bearer "):

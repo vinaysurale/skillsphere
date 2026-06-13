@@ -14,6 +14,12 @@ def initialize_firebase():
     if firebase_app is not None:
         return firebase_app
 
+    # Check if Firebase was already initialized by another module (e.g., firebase_db.py)
+    if firebase_admin._apps:
+        firebase_app = firebase_admin.get_app()
+        logger.info("Firebase Admin SDK already initialized by another module, reusing.")
+        return firebase_app
+
     # Try to initialize Firebase
     try:
         # Option 1: Firebase credentials JSON string from env
