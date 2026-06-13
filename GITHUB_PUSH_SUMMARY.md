@@ -16,7 +16,16 @@ Your SkillSphere AI project has been successfully pushed to GitHub with all the 
 
 ## 📝 Latest Commits
 
-### Commit 1: Firebase Integration
+### Commit 1: Bug Fixes (LATEST) ✨
+```
+5ad1e5f - Fix Three.js flatShading warnings and 401 auth errors
+```
+- **Fixed Three.js flatShading warnings** - Changed from constructor parameter to property setter
+- **Fixed 401 authentication errors** - Added graceful error handling for logged-out users
+- **Improved UX** - Silent handling of expected authentication failures
+- **Files:** roblox_models.js, three_bg.js, auth.js, app.js
+
+### Commit 2: Firebase Integration
 ```
 6287cf8 - docs: add comprehensive README with Firebase and 3D theme documentation
 ```
@@ -25,7 +34,7 @@ Your SkillSphere AI project has been successfully pushed to GitHub with all the 
 - Setup instructions
 - API documentation
 
-### Commit 2: Firebase Implementation
+### Commit 3: Firebase Implementation
 ```
 3d234cd - Add Firebase Realtime Database and Authentication integration
 ```
@@ -35,7 +44,7 @@ Your SkillSphere AI project has been successfully pushed to GitHub with all the 
 - Migration guides
 - Updated .gitignore
 
-### Commit 3: Previous Updates
+### Commit 4: Previous Updates
 ```
 65bdd03 - feat: configure firebase realtime database support
 b033c39 - deploy: specify stable Python version 3.11
@@ -46,7 +55,14 @@ b033c39 - deploy: specify stable Python version 3.11
 
 ## 📁 Files Added/Modified
 
-### New Files (Firebase Integration)
+### Latest Push (Commit 5ad1e5f)
+✅ `app/static/js/roblox_models.js` - Fixed flatShading in all materials  
+✅ `app/static/js/three_bg.js` - Fixed flatShading in background blocks  
+✅ `app/static/js/auth.js` - Added error handling for auth calls  
+✅ `app/static/js/app.js` - Improved getUser() error handling  
+✅ `GITHUB_PUSH_SUMMARY.md` - Updated push summary  
+
+### Previous Files (Firebase Integration)
 ✅ `app/services/firebase_db.py` - Database operations  
 ✅ `app/services/firebase_auth_service.py` - Auth service  
 ✅ `app/routers/auth_firebase.py` - Auth endpoints  
@@ -83,12 +99,14 @@ Visit your repository:
 
 ## 📊 Repository Stats
 
-- **Total Commits:** 5+
+- **Total Commits:** 6+
+- **Last Push:** 5ad1e5f (Bug Fixes)
 - **Files:** 100+
 - **Language:** Python (FastAPI)
 - **Theme:** Authentic Roblox 3D
 - **Database:** Firebase Realtime DB
 - **Auth:** Firebase Authentication
+- **Status:** ✅ All known bugs fixed
 
 ---
 
