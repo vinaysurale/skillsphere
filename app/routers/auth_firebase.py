@@ -316,7 +316,7 @@ def get_firebase_config():
 
 
 @router.delete("/account")
-def delete_account(user: dict = Depends(get_current_user), response: Response):
+def delete_account(response: Response, user: dict = Depends(get_current_user)):
     """Delete user account from Firebase Auth and database."""
     try:
         FirebaseAuthService.delete_user(user['id'])
