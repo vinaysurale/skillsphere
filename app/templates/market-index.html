@@ -1,0 +1,50 @@
+{% extends "base.html" %}
+{% block title %}Skill Market Index{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="page-header">
+        <h1>Skill Market Index</h1>
+        <p>Real-time skill demand tracking — like NIFTY, but for tech skills</p>
+    </div>
+
+    <!-- Market Indexes -->
+    <div class="grid-4 mb-3" id="marketIndexes">
+        <!-- Filled by JS -->
+    </div>
+
+    <div class="grid-2">
+        <!-- Trend Chart -->
+        <div class="glass-card animate-in">
+            <div class="flex items-center justify-between mb-2">
+                <h3>📈 Trend Chart</h3>
+                <select id="trendCategory" class="form-control" style="width: auto; min-width: 160px;" onchange="loadTrend()">
+                    <option value="">Select category...</option>
+                </select>
+            </div>
+            <div class="chart-container">
+                <canvas id="trendChart"></canvas>
+            </div>
+        </div>
+
+        <!-- Category Heatmap -->
+        <div class="glass-card animate-in">
+            <h3 class="mb-2">🗺️ Category Heatmap</h3>
+            <div id="heatmapContainer"></div>
+        </div>
+    </div>
+
+    <!-- Emerging Skills Radar -->
+    <div class="glass-card mt-3 animate-in">
+        <h3 class="mb-2">🛸 Emerging Skills Radar</h3>
+        <p class="text-secondary mb-2" style="font-size: 0.875rem;">Skills with the highest growth rate — the future of tech</p>
+        <div class="bubble-chart" id="emergingBubbles">
+            <!-- Filled by JS -->
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script src="/static/js/charts.js"></script>
+{% endblock %}

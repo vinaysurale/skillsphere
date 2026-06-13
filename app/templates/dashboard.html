@@ -1,0 +1,165 @@
+{% extends "base.html" %}
+{% block title %}Dashboard{% endblock %}
+
+{% block content %}
+<div class="container" style="max-width: 1200px; padding-top: 1rem;">
+    <div class="page-header mb-3" style="display: flex; justify-content: space-between; align-items: center;">
+        <div>
+            <h1 style="font-family: var(--font-heading); font-size: 2.25rem; font-weight: 900;">Dashboard</h1>
+            <p id="dashWelcome" style="color: var(--text-secondary); font-size: 0.95rem;">Welcome back! Here's your skill overview.</p>
+        </div>
+        <div>
+            <!-- Date/Time Tag -->
+            <span class="badge badge-purple" style="font-weight: 800; padding: 0.5rem 1rem;">Roblox Dev Mode</span>
+        </div>
+    </div>
+
+    <!-- Stats Row (Developer Portal Mockup style, colorful) -->
+    <div class="grid-4 mb-3" id="statsRow">
+        <div class="stat-card red animate-in" style="display: flex; flex-direction: column; align-items: flex-start; justify-content: space-between; padding: 1.5rem; background: #161b2e !important; border-radius: var(--radius-md);">
+            <div style="display: flex; width: 100%; justify-content: space-between; align-items: center; margin-bottom: 0.5rem;">
+                <span style="font-size: 1.75rem; color: #ffcb00;">🪙</span>
+                <span class="badge badge-success" style="font-size: 0.7rem; font-weight: 800;">+5%</span>
+            </div>
+            <div class="stat-value" id="statPortfolioScore" style="font-size: 1.85rem; font-weight: 900; color: #ffffff;">—</div>
+            <div class="stat-label" style="font-size: 0.75rem; color: #bbbcbe; font-weight: 800; text-transform: uppercase;">Portfolio Score (Total Robux)</div>
+        </div>
+
+        <div class="stat-card blue animate-in" style="display: flex; flex-direction: column; align-items: flex-start; justify-content: space-between; padding: 1.5rem; background: #161b2e !important; border-radius: var(--radius-md);">
+            <div style="display: flex; width: 100%; justify-content: space-between; align-items: center; margin-bottom: 0.5rem;">
+                <span style="font-size: 1.75rem; color: #3b82f6;">👥</span>
+                <span class="badge badge-purple" style="font-size: 0.7rem; font-weight: 800;">Active</span>
+            </div>
+            <div class="stat-value" id="statTotalSkills" style="font-size: 1.85rem; font-weight: 900; color: #ffffff;">—</div>
+            <div class="stat-label" style="font-size: 0.75rem; color: #bbbcbe; font-weight: 800; text-transform: uppercase;">Skills in Portfolio (Active Players)</div>
+        </div>
+
+        <div class="stat-card gold animate-in" style="display: flex; flex-direction: column; align-items: flex-start; justify-content: space-between; padding: 1.5rem; background: #161b2e !important; border-radius: var(--radius-md);">
+            <div style="display: flex; width: 100%; justify-content: space-between; align-items: center; margin-bottom: 0.5rem;">
+                <span style="font-size: 1.75rem; color: #f59e0b;">🏆</span>
+                <span class="badge badge-warning" style="font-size: 0.7rem; font-weight: 800;">Target</span>
+            </div>
+            <div class="stat-value" id="statGapCompletion" style="font-size: 1.85rem; font-weight: 900; color: #ffffff;">—</div>
+            <div class="stat-label" style="font-size: 0.75rem; color: #bbbcbe; font-weight: 800; text-transform: uppercase;">Goal Completion (Live Games)</div>
+        </div>
+
+        <div class="stat-card green animate-in" style="display: flex; flex-direction: column; align-items: flex-start; justify-content: space-between; padding: 1.5rem; background: #161b2e !important; border-radius: var(--radius-md);">
+            <div style="display: flex; width: 100%; justify-content: space-between; align-items: center; margin-bottom: 0.5rem;">
+                <span style="font-size: 1.75rem; color: #10b981;">📈</span>
+                <span class="badge badge-success" style="font-size: 0.7rem; font-weight: 800;">Covered</span>
+            </div>
+            <div class="stat-value" id="statCategories" style="font-size: 1.85rem; font-weight: 900; color: #ffffff;">—</div>
+            <div class="stat-label" style="font-size: 0.75rem; color: #bbbcbe; font-weight: 800; text-transform: uppercase;">Categories Covered</div>
+        </div>
+    </div>
+
+    <!-- Main Grid Overhaul -->
+    <div class="grid-2">
+        <!-- LEFT COLUMN: Charts -->
+        <div style="display: flex; flex-direction: column; gap: 1.5rem;">
+            <!-- Daily Performance Chart -->
+            <div class="glass-card animate-in" style="padding: 1.5rem; background: #161b2e !important; border-radius: var(--radius-md);">
+                <div class="flex items-center justify-between mb-3">
+                    <h3 style="font-family: var(--font-heading); font-size: 1.15rem; font-weight: 900;">Daily Skill Demand Trend</h3>
+                    <span style="color: #6b7280; font-size: 1.25rem; cursor: pointer;">•••</span>
+                </div>
+                <div class="chart-container" style="height: 220px; position: relative;">
+                    <canvas id="performanceChart"></canvas>
+                </div>
+                <div class="cta-group mt-3" style="display: flex; gap: 1rem;">
+                    <a href="/portfolio" class="btn btn-roblox-red" style="flex: 1; text-align: center; font-size: 0.8rem; font-weight: 800; text-decoration: none;">Add New Skill</a>
+                    <a href="/gap-analysis" class="btn btn-roblox-grey" style="flex: 1; text-align: center; font-size: 0.8rem; font-weight: 800; text-decoration: none;">View Analytics</a>
+                </div>
+            </div>
+
+            <!-- Monetization Overview / Category breakdown doughnut -->
+            <div class="glass-card animate-in" style="padding: 1.5rem; background: #161b2e !important; border-radius: var(--radius-md);">
+                <div class="flex items-center justify-between mb-3">
+                    <h3 style="font-family: var(--font-heading); font-size: 1.15rem; font-weight: 900;">Portfolio Domain Breakdown</h3>
+                    <a href="/portfolio" class="btn btn-sm btn-roblox-red" style="font-size: 0.75rem; font-weight: 800; padding: 0.3rem 0.8rem; text-decoration: none;">Manage Assets</a>
+                </div>
+                
+                <div style="display: flex; align-items: center; justify-content: space-between; gap: 1.5rem;">
+                    <div class="chart-container" style="height: 160px; width: 160px; position: relative; flex-shrink: 0;">
+                        <canvas id="categoryBreakdownChart"></canvas>
+                    </div>
+                    <div id="categoryLegend" style="flex: 1; display: flex; flex-direction: column; gap: 0.5rem; font-size: 0.8rem; font-weight: 700; color: #bbbcbe;">
+                        <div class="flex items-center gap-xs">
+                            <span style="display: inline-block; width: 10px; height: 10px; background: #ff4b57; border-radius: 2px;"></span>
+                            <span id="legend-ai">AI & Machine Learning (0%)</span>
+                        </div>
+                        <div class="flex items-center gap-xs">
+                            <span style="display: inline-block; width: 10px; height: 10px; background: #3b82f6; border-radius: 2px;"></span>
+                            <span id="legend-cloud">Cloud & DevOps (0%)</span>
+                        </div>
+                        <div class="flex items-center gap-xs">
+                            <span style="display: inline-block; width: 10px; height: 10px; background: #10b981; border-radius: 2px;"></span>
+                            <span id="legend-dev">Systems & Web (0%)</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- RIGHT COLUMN: Grid cards and Logs -->
+        <div style="display: flex; flex-direction: column; gap: 1.5rem;">
+            <!-- Top Performing Games / Skills -->
+            <div class="glass-card animate-in" style="padding: 1.5rem; background: #161b2e !important; border-radius: var(--radius-md);">
+                <div class="flex items-center justify-between mb-3">
+                    <h3 style="font-family: var(--font-heading); font-size: 1.15rem; font-weight: 900;">Top Performing Skills</h3>
+                    <span style="color: #6b7280; font-size: 1.25rem; cursor: pointer;">•••</span>
+                </div>
+                <div id="robloxSkillsGrid" style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 0.75rem;">
+                    <!-- Skill Cards populated by JS -->
+                    <div class="empty-state" style="grid-column: span 3; padding: 2rem 0;">
+                        <div class="spinner" style="margin: 0 auto;"></div>
+                        <p class="mt-1" style="font-size: 0.85rem; color: #9ca3af;">Loading skills...</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Recent Activity List -->
+            <div class="glass-card animate-in" style="padding: 1.5rem; background: #161b2e !important; border-radius: var(--radius-md);">
+                <div class="flex items-center justify-between mb-3">
+                    <h3 style="font-family: var(--font-heading); font-size: 1.15rem; font-weight: 900;">Recent Portal Activity</h3>
+                    <a href="/profile" class="btn btn-sm btn-roblox-red" style="font-size: 0.75rem; font-weight: 800; padding: 0.3rem 0.8rem; text-decoration: none;">Manage Goals</a>
+                </div>
+                <div id="activityLogContainer" style="display: flex; flex-direction: column;">
+                    <div class="activity-log-item">
+                        <div class="activity-icon-block" style="background: rgba(255, 75, 87, 0.1); border-color: rgba(255, 75, 87, 0.2);">🔥</div>
+                        <div class="activity-details">
+                            <div class="activity-title">Skill Portfolio updated</div>
+                            <div class="activity-date">Today at 14:35</div>
+                        </div>
+                    </div>
+                    <div class="activity-log-item">
+                        <div class="activity-icon-block" style="background: rgba(59, 130, 246, 0.1); border-color: rgba(59, 130, 246, 0.2);">🎯</div>
+                        <div class="activity-details">
+                            <div class="activity-title">Career Goal aligned: Machine Learning Engineer</div>
+                            <div class="activity-date">Yesterday at 18:20</div>
+                        </div>
+                    </div>
+                    <div class="activity-log-item">
+                        <div class="activity-icon-block" style="background: rgba(16, 185, 129, 0.1); border-color: rgba(16, 185, 129, 0.2);">📈</div>
+                        <div class="activity-details">
+                            <div class="activity-title">Market index analyzed for Agentic AI</div>
+                            <div class="activity-date">June 11, 2026</div>
+                        </div>
+                    </div>
+                    <div class="activity-log-item">
+                        <div class="activity-icon-block" style="background: rgba(245, 158, 11, 0.1); border-color: rgba(245, 158, 11, 0.2);">🚀</div>
+                        <div class="activity-details">
+                            <div class="activity-title">Simulation session finalized: DevOps track</div>
+                            <div class="activity-date">June 08, 2026</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script src="/static/js/dashboard.js"></script>
+{% endblock %}

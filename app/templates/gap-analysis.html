@@ -1,0 +1,236 @@
+{% extends "base.html" %}
+{% block title %}Skill Gap Analysis{% endblock %}
+
+{% block head %}
+<style>
+.flashcard-container {
+    perspective: 1000px;
+    width: 100%;
+    height: 220px;
+    cursor: pointer;
+}
+.flashcard {
+    width: 100%;
+    height: 100%;
+    position: relative;
+    transform-style: preserve-3d;
+    transition: transform 0.6s var(--ease-spring);
+    box-shadow: var(--shadow-md);
+    border-radius: var(--radius-lg);
+}
+.flashcard.flipped {
+    transform: rotateY(180deg);
+}
+.flashcard-front, .flashcard-back {
+    position: absolute;
+    inset: 0;
+    backface-visibility: hidden;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 1.5rem;
+    border-radius: var(--radius-lg);
+    border: 1px solid var(--border);
+    text-align: center;
+}
+.flashcard-front {
+    background: var(--bg-tertiary);
+    color: var(--text-primary);
+    font-weight: 700;
+    font-size: 1.1rem;
+}
+.flashcard-back {
+    background: var(--surface-hover);
+    color: var(--text-primary);
+    transform: rotateY(180deg);
+    font-size: 0.9375rem;
+    line-height: 1.6;
+}
+.study-resource-item {
+    border: 1px solid var(--border);
+    border-radius: var(--radius-md);
+    padding: 1rem;
+    background: var(--surface);
+    transition: all 0.2s var(--ease-out);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+.study-resource-item:hover {
+    border-color: var(--text-accent);
+    background: var(--surface-hover);
+}
+</style>
+{% endblock %}
+
+
+{% block content %}
+<div class="container">
+    <div class="page-header">
+        <h1>Skill Gap Analysis</h1>
+        <p>Compare your skills against career path requirements</p>
+    </div>
+
+    <!-- Career Path Selector -->
+    <div class="glass-card mb-3 animate-in">
+        <h3 class="mb-2">Select a Career Path</h3>
+        <div class="grid-4" id="careerPathGrid">
+            <!-- Filled by JS -->
+        </div>
+    </div>
+
+    <!-- Resume Matcher Card -->
+    <div id="resumeCard" class="glass-card mb-3 animate-in hidden">
+        <h3 class="mb-1">⚡ AI Resume Matcher</h3>
+        <p class="text-secondary mb-2" style="font-size: 0.875rem;">Upload your PDF resume to calculate a custom match score against the selected career path.</p>
+        
+        <div class="grid-2">
+            <!-- Upload Zone -->
+            <div class="upload-zone" id="uploadZone" onclick="document.getElementById('resumeFileInput').click()">
+                <div class="upload-icon">📄</div>
+                <h4>Drag & Drop your Resume (PDF)</h4>
+                <p class="text-secondary" style="font-size: 0.8125rem;">or click to browse from files</p>
+                <input type="file" id="resumeFileInput" style="display: none;" accept=".pdf">
+                <div class="text-secondary mt-1" id="uploadStatus" style="font-size: 0.875rem; font-weight: 600;"></div>
+            </div>
+            
+            <!-- Parser Output -->
+            <div id="resumeAnalysisOutput" class="flex flex-column justify-center" style="gap: 1rem; border-left: 1px solid var(--border); padding-left: 1.5rem; display: none;">
+                <div class="flex items-center gap-md">
+                    <div class="stat-value text-gradient" id="resumeMatchPercent" style="font-size: 3rem; line-height: 1;">0%</div>
+                    <div>
+                        <h4 style="color: var(--text-primary);">Resume Alignment</h4>
+                        <p class="text-secondary" style="font-size: 0.75rem;">Match score based on required skills</p>
+                    </div>
+                </div>
+                <div class="mt-1">
+                    <h5 class="mb-1" style="font-size: 0.8125rem; text-transform: uppercase; color: var(--text-secondary);">Summary</h5>
+                    <p id="resumeSummaryText" style="font-size: 0.875rem; line-height: 1.5; color: var(--text-primary);"></p>
+                </div>
+                <div class="mt-1">
+                    <h5 class="mb-1" style="font-size: 0.8125rem; text-transform: uppercase; color: var(--text-secondary);">Strengths Found</h5>
+                    <ul id="resumeStrengthsList" style="font-size: 0.8125rem; color: var(--success); padding-left: 1.25rem;"></ul>
+                </div>
+            </div>
+            
+            <div id="resumePlaceholderOutput" class="flex items-center justify-center text-secondary" style="border-left: 1px solid var(--border); padding-left: 1.5rem;">
+                <p style="font-size: 0.875rem; text-align: center;">Upload your resume to see alignment analysis.</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Gap Results -->
+    <div id="gapResults" class="hidden">
+        <!-- Completion Bar -->
+        <div class="glass-card mb-3 animate-in">
+            <div class="flex items-center justify-between mb-1">
+                <div>
+                    <h3 id="gapCareerName" style="font-size: 1.25rem;"></h3>
+                    <p class="text-secondary" id="gapCareerDesc" style="font-size: 0.875rem;"></p>
+                </div>
+                <div class="text-right">
+                    <div class="stat-value text-gradient" id="gapCompletion" style="font-size: 2.5rem;">0%</div>
+                    <div class="text-secondary" style="font-size: 0.8125rem;">Completion</div>
+                </div>
+            </div>
+            <div class="progress-bar mt-2">
+                <div class="progress-fill" id="gapProgressFill" style="width: 0%;"></div>
+            </div>
+            <div class="flex justify-between mt-1 text-secondary" style="font-size: 0.75rem;">
+                <span id="gapMatchedCount">0 matched</span>
+                <span id="gapMissingCount">0 missing</span>
+            </div>
+        </div>
+
+        <div class="grid-2">
+            <!-- Matched Skills -->
+            <div class="glass-card animate-in">
+                <h3 class="mb-2" style="color: var(--success);">✅ Skills You Have</h3>
+                <div id="matchedSkills"></div>
+            </div>
+
+            <!-- Missing Skills -->
+            <div class="glass-card animate-in">
+                <h3 class="mb-2" style="color: var(--danger);">❌ Skills You Need</h3>
+                <div id="missingSkills"></div>
+            </div>
+        </div>
+
+        <!-- Learning Priority -->
+        <div class="glass-card mt-3 animate-in">
+            <h3 class="mb-2">📚 Learning Priority</h3>
+            <div id="learningPriority"></div>
+        </div>
+
+        <!-- AI Roadmap -->
+        <div class="glass-card mt-3 animate-in">
+            <div class="flex items-center justify-between mb-2">
+                <h3>🤖 AI Learning Roadmap</h3>
+                <button class="btn btn-accent btn-sm" onclick="loadRoadmap()">Generate Roadmap</button>
+            </div>
+            <div id="roadmapContent">
+                <p class="text-secondary" style="font-size: 0.875rem;">Click "Generate Roadmap" to get a personalized learning path.</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Study Quest Modal -->
+    <div id="studyModal" class="loading-overlay hidden" style="display: none; align-items: center; justify-content: center; z-index: 2000;">
+        <div class="glass-card" style="width: 90%; max-width: 600px; padding: 2rem; position: relative; max-height: 90vh; overflow-y: auto;">
+            <button onclick="closeStudyModal()" style="position: absolute; top: 1rem; right: 1.5rem; background: none; border: none; font-size: 1.5rem; color: var(--text-secondary); cursor: pointer;">✕</button>
+            
+            <div class="flex items-center gap-md mb-2">
+                <div id="studySkillIcon" style="font-size: 2rem; background: rgba(79, 70, 229, 0.1); width: 50px; height: 50px; border-radius: var(--radius-md); display: flex; align-items: center; justify-content: center;">📘</div>
+                <div>
+                    <h2 id="studySkillName" class="text-gradient" style="font-size: 1.5rem; font-weight: 800;">Study Quest</h2>
+                    <span class="badge badge-purple" id="studySkillCategory" style="margin-top: 0.25rem;">Programming</span>
+                </div>
+            </div>
+            
+            <p id="studySkillDesc" class="text-secondary mb-3" style="font-size: 0.875rem; line-height: 1.5;"></p>
+            
+            <div class="tabs">
+                <button class="tab-btn active" id="tabStudy" onclick="switchStudyTab('study')">📚 Study Materials</button>
+                <button class="tab-btn" id="tabQuest" onclick="switchStudyTab('quest')">⚡ Flashcard Quest</button>
+            </div>
+            
+            <!-- Study Materials Tab -->
+            <div id="studyTabContent" class="tab-content active">
+                <div id="studyMaterialsList" class="flex flex-col" style="gap: 1rem;">
+                    <!-- Filled by JS -->
+                </div>
+            </div>
+            
+            <!-- Interactive Quest Tab -->
+            <div id="questTabContent" class="tab-content">
+                <div class="flex flex-col items-center justify-center" style="gap: 1.5rem; padding: 1rem 0;">
+                    <!-- Flashcard container -->
+                    <div class="flashcard-container" onclick="flipFlashcard()">
+                        <div class="flashcard" id="flashcardDeck">
+                            <div class="flashcard-front">
+                                <h4 id="cardQuestion">Question?</h4>
+                                <span class="text-secondary mt-3" style="font-size: 0.75rem; font-weight: 500;">(Click to flip and reveal answer)</span>
+                            </div>
+                            <div class="flashcard-back">
+                                <p id="cardAnswer">Answer details...</p>
+                                <span class="text-accent mt-3" style="font-size: 0.75rem; font-weight: 500;">(Click to flip back)</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="flex justify-between items-center" style="width: 100%; gap: 1rem; margin-top: 1rem;">
+                        <button class="btn btn-secondary btn-sm" onclick="prevFlashcard()">← Prev</button>
+                        <span id="flashcardProgress" class="text-secondary" style="font-size: 0.875rem; font-weight: 600;">Card 1 of 3</span>
+                        <button class="btn btn-secondary btn-sm" onclick="nextFlashcard()">Next →</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script src="/static/js/gap-engine.js"></script>
+{% endblock %}

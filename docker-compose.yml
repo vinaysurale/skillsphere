@@ -1,0 +1,18 @@
+version: '3.8'
+
+services:
+  web:
+    build: .
+    ports:
+      - "8000:8000"
+    volumes:
+      - sqlite_data:/workspace/data
+    environment:
+      - DATABASE_URL=sqlite:////workspace/data/skillsphere.db
+      - SECRET_KEY=skillsphere-production-secret-key-change-me
+      - GEMINI_API_KEY=${GEMINI_API_KEY}
+      # Add other environment variables as needed from .env
+    restart: always
+
+volumes:
+  sqlite_data:

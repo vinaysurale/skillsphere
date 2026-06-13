@@ -1,0 +1,40 @@
+{% extends "base.html" %}
+
+{% block title %}SkillSphere AI{% endblock %}
+
+{% block content %}
+<section class="hero">
+    <div class="hero-content">
+        <h1>
+            The <span class="gradient-text">Bloomberg</span><br>for Skills
+        </h1>
+        <p class="subtitle">
+            Track real-time skill demand, analyze career gaps, simulate growth paths,
+            and get AI-powered roadmaps — all in one intelligent platform.
+        </p>
+        <div class="roblox-3d-model" data-model="avatar" style="width: 240px; height: 300px; margin: 1.5rem auto;"></div>
+        <div class="cta-group">
+            <a href="/signup" class="btn btn-primary btn-lg">Get Started Free →</a>
+            <a href="/market" class="btn btn-secondary btn-lg">Explore Skill Market</a>
+        </div>
+
+        <div class="features-grid">
+            <div class="feature-card animate-in">
+                <div class="feature-icon">📊</div>
+                <h3>Skill Market Index</h3>
+                <p>Real-time tracking of skill demand across AI, Cloud, DevOps, and more — like NIFTY but for skills.</p>
+            </div>
+            <div class="feature-card animate-in">
+                <div class="feature-icon">🎯</div>
+                <h3>Gap Analysis Engine</h3>
+                <p>See exactly what skills you need to reach your career goal, with priority-ranked learning paths.</p>
+            </div>
+            <div class="feature-card animate-in">
+                <div class="feature-icon">🤖</div>
+                <h3>AI Career Advisor</h3>
+                <p>Get personalized recommendations, learning roadmaps, and career simulations powered by AI.</p>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}

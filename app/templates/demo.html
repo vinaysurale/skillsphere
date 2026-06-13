@@ -1,0 +1,366 @@
+{% extends "base.html" %}
+
+{% block title %}3D Theme Demo - SkillSphere AI{% endblock %}
+
+{% block content %}
+<div class="container" style="padding: 3rem 1rem;">
+    
+    <!-- Hero Section -->
+    <div style="text-align: center; margin-bottom: 4rem;">
+        <h1 class="glow-text" style="font-size: 3rem; margin-bottom: 1rem;">
+            🎮 Roblox 3D Theme Demo
+        </h1>
+        <p style="font-size: 1.2rem; color: #9ca3af; max-width: 600px; margin: 0 auto;">
+            Experience the immersive 3D interactive elements, custom cursor effects, 
+            particle systems, and sound design.
+        </p>
+    </div>
+
+    <!-- 3D Models Showcase -->
+    <section style="margin-bottom: 4rem;">
+        <h2 style="text-align: center; margin-bottom: 2rem; color: var(--primary);">
+            🎨 Interactive 3D Models
+        </h2>
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 2rem;">
+            
+            <!-- Avatar Model -->
+            <div class="glass-card" style="padding: 2rem; text-align: center;">
+                <div class="roblox-3d-model" data-model="avatar" style="width: 100%; height: 300px; margin-bottom: 1rem;"></div>
+                <h3>3D Avatar</h3>
+                <p style="color: #9ca3af; font-size: 0.9rem;">
+                    Click and drag to rotate. Watch the wave animation!
+                </p>
+            </div>
+
+            <!-- Rocket Model -->
+            <div class="glass-card" style="padding: 2rem; text-align: center;">
+                <div class="roblox-3d-model" data-model="rocket" style="width: 100%; height: 300px; margin-bottom: 1rem;"></div>
+                <h3>🚀 Rocket</h3>
+                <p style="color: #9ca3af; font-size: 0.9rem;">
+                    Launch your career to new heights!
+                </p>
+            </div>
+
+            <!-- Diamond Model -->
+            <div class="glass-card" style="padding: 2rem; text-align: center;">
+                <div class="roblox-3d-model" data-model="diamond" style="width: 100%; height: 300px; margin-bottom: 1rem;"></div>
+                <h3>💎 Diamond</h3>
+                <p style="color: #9ca3af; font-size: 0.9rem;">
+                    Rare skills that shine bright!
+                </p>
+            </div>
+
+            <!-- Portal Model -->
+            <div class="glass-card" style="padding: 2rem; text-align: center;">
+                <div class="roblox-3d-model" data-model="portal" style="width: 100%; height: 300px; margin-bottom: 1rem;"></div>
+                <h3>🌀 Portal</h3>
+                <p style="color: #9ca3af; font-size: 0.9rem;">
+                    Gateway to new opportunities!
+                </p>
+            </div>
+
+        </div>
+    </section>
+
+    <!-- 2D Widgets Showcase -->
+    <section style="margin-bottom: 4rem;">
+        <h2 style="text-align: center; margin-bottom: 2rem; color: var(--primary);">
+            📊 2D Animated Widgets
+        </h2>
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 2rem;">
+            
+            <!-- Gear Widget -->
+            <div class="stat-card" style="padding: 2rem; text-align: center;">
+                <div class="roblox-3d-model" data-model="gear" style="width: 80px; height: 80px; margin: 0 auto 1rem;"></div>
+                <h3>Settings</h3>
+                <p style="color: #9ca3af;">Hover to spin faster</p>
+            </div>
+
+            <!-- Trophy Widget -->
+            <div class="stat-card" style="padding: 2rem; text-align: center;">
+                <div class="roblox-3d-model" data-model="trophy" style="width: 80px; height: 80px; margin: 0 auto 1rem;"></div>
+                <h3>Achievements</h3>
+                <p style="color: #9ca3af;">Click to jump</p>
+            </div>
+
+            <!-- Chart Widget -->
+            <div class="stat-card" style="padding: 2rem; text-align: center;">
+                <div class="roblox-3d-model" data-model="chart" style="width: 80px; height: 80px; margin: 0 auto 1rem;"></div>
+                <h3>Analytics</h3>
+                <p style="color: #9ca3af;">Live data bars</p>
+            </div>
+
+        </div>
+    </section>
+
+    <!-- Interactive Effects Demo -->
+    <section style="margin-bottom: 4rem;">
+        <h2 style="text-align: center; margin-bottom: 2rem; color: var(--primary);">
+            ✨ Interactive Effects
+        </h2>
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 2rem;">
+            
+            <!-- Card Tilt -->
+            <div class="glass-card" style="padding: 2rem;">
+                <h3 style="margin-bottom: 1rem;">🎯 3D Card Tilt</h3>
+                <p style="color: #9ca3af; margin-bottom: 1rem;">
+                    Move your mouse over this card to see the 3D perspective tilt effect.
+                </p>
+                <div style="background: var(--bg-secondary); padding: 1rem; border-radius: 8px; text-align: center;">
+                    <div style="font-size: 3rem;">🎴</div>
+                </div>
+            </div>
+
+            <!-- Glowing Border -->
+            <div class="glass-card" style="padding: 2rem;">
+                <h3 style="margin-bottom: 1rem;">💫 Mouse-Following Glow</h3>
+                <p style="color: #9ca3af; margin-bottom: 1rem;">
+                    Watch the border glow follow your cursor around the card edges.
+                </p>
+                <div style="background: var(--bg-secondary); padding: 1rem; border-radius: 8px; text-align: center;">
+                    <div style="font-size: 3rem;">✨</div>
+                </div>
+            </div>
+
+            <!-- Particle Hover -->
+            <div class="glass-card" style="padding: 2rem;">
+                <h3 style="margin-bottom: 1rem;">🎆 Hover Particles</h3>
+                <p style="color: #9ca3af; margin-bottom: 1rem;">
+                    Hover to see floating particles appear within the card.
+                </p>
+                <div style="background: var(--bg-secondary); padding: 1rem; border-radius: 8px; text-align: center;">
+                    <div style="font-size: 3rem;">💫</div>
+                </div>
+            </div>
+
+        </div>
+    </section>
+
+    <!-- Button Effects -->
+    <section style="margin-bottom: 4rem;">
+        <h2 style="text-align: center; margin-bottom: 2rem; color: var(--primary);">
+            🎮 Button Interactions
+        </h2>
+        <div style="display: flex; flex-wrap: wrap; gap: 1rem; justify-content: center;">
+            <button class="btn btn-primary">
+                Primary Button
+            </button>
+            <button class="btn btn-secondary">
+                Secondary Button
+            </button>
+            <button class="btn btn-primary">
+                Magnetic Pull Effect
+            </button>
+            <button class="btn btn-primary">
+                Particle Burst
+            </button>
+            <button class="btn btn-secondary">
+                Sound Effects
+            </button>
+        </div>
+        <p style="text-align: center; color: #9ca3af; margin-top: 1rem;">
+            Hover and click buttons to experience magnetic pull, particle bursts, and sound effects
+        </p>
+    </section>
+
+    <!-- Loading States -->
+    <section style="margin-bottom: 4rem;">
+        <h2 style="text-align: center; margin-bottom: 2rem; color: var(--primary);">
+            ⏳ Loading Animations
+        </h2>
+        <div style="display: flex; justify-content: center; gap: 3rem; flex-wrap: wrap;">
+            
+            <div style="text-align: center;">
+                <div class="roblox-spinner">
+                    <div class="roblox-spinner-cube"></div>
+                    <div class="roblox-spinner-cube"></div>
+                    <div class="roblox-spinner-cube"></div>
+                    <div class="roblox-spinner-cube"></div>
+                </div>
+                <p style="color: #9ca3af; margin-top: 1rem;">Roblox Cube Spinner</p>
+            </div>
+
+        </div>
+    </section>
+
+    <!-- Background Effects -->
+    <section style="margin-bottom: 4rem;">
+        <h2 style="text-align: center; margin-bottom: 2rem; color: var(--primary);">
+            🌌 Background Effects
+        </h2>
+        <div class="glass-card" style="padding: 2rem;">
+            <h3 style="margin-bottom: 1rem;">Interactive 3D Background</h3>
+            <ul style="color: #9ca3af; line-height: 2;">
+                <li>✅ <strong>Mouse Movement:</strong> Background parallax follows cursor</li>
+                <li>✅ <strong>Click Shockwave:</strong> Click anywhere to push blocks away</li>
+                <li>✅ <strong>Floating Blocks:</strong> 20+ 3D shapes drifting in space</li>
+                <li>✅ <strong>Pulse Animation:</strong> Blocks breathe and scale</li>
+                <li>✅ <strong>Dynamic Lighting:</strong> Color lights move around</li>
+            </ul>
+        </div>
+    </section>
+
+    <!-- Cursor Effects -->
+    <section style="margin-bottom: 4rem;">
+        <h2 style="text-align: center; margin-bottom: 2rem; color: var(--primary);">
+            🖱️ Custom Cursor System
+        </h2>
+        <div class="glass-card" style="padding: 2rem;">
+            <h3 style="margin-bottom: 1rem;">Enhanced Cursor Features</h3>
+            <ul style="color: #9ca3af; line-height: 2;">
+                <li>✅ <strong>Custom Cursor:</strong> Blocky Roblox-style cursor design</li>
+                <li>✅ <strong>Smooth Following:</strong> Cursor lags behind for smooth effect</li>
+                <li>✅ <strong>Particle Trail:</strong> Sparkle trail follows cursor</li>
+                <li>✅ <strong>Click Animation:</strong> Cursor grows and changes color on click</li>
+                <li>✅ <strong>Ripple Effect:</strong> Rings spread from click point</li>
+            </ul>
+        </div>
+    </section>
+
+    <!-- Particle System -->
+    <section style="margin-bottom: 4rem;">
+        <h2 style="text-align: center; margin-bottom: 2rem; color: var(--primary);">
+            🎆 Particle System Features
+        </h2>
+        <div class="glass-card" style="padding: 2rem;">
+            <h3 style="margin-bottom: 1rem;">Advanced Particle Effects</h3>
+            <ul style="color: #9ca3af; line-height: 2;">
+                <li>✅ <strong>Ambient Particles:</strong> 50 floating particles across screen</li>
+                <li>✅ <strong>Mouse Repulsion:</strong> Particles avoid cursor</li>
+                <li>✅ <strong>Connecting Lines:</strong> Lines between nearby particles</li>
+                <li>✅ <strong>Button Bursts:</strong> Particle explosion on hover</li>
+                <li>✅ <strong>Scroll Reveal:</strong> Cards appear with particle burst</li>
+                <li>✅ <strong>Badge Shimmer:</strong> Shine effect on skill badges</li>
+                <li>✅ <strong>Nav Sparkles:</strong> Sparkles on navigation hover</li>
+            </ul>
+        </div>
+    </section>
+
+    <!-- Sound System -->
+    <section style="margin-bottom: 4rem;">
+        <h2 style="text-align: center; margin-bottom: 2rem; color: var(--primary);">
+            🔊 Sound Design
+        </h2>
+        <div class="glass-card" style="padding: 2rem;">
+            <h3 style="margin-bottom: 1rem;">Immersive Audio Feedback</h3>
+            <p style="color: #9ca3af; margin-bottom: 1rem;">
+                Toggle sound using the button in the navigation bar. Sound effects include:
+            </p>
+            <ul style="color: #9ca3af; line-height: 2;">
+                <li>✅ <strong>Button Interactions:</strong> Hover beeps and click sounds</li>
+                <li>✅ <strong>Navigation:</strong> Whoosh on page transitions</li>
+                <li>✅ <strong>Card Interactions:</strong> Gentle tones on hover</li>
+                <li>✅ <strong>Form Inputs:</strong> Focus/blur audio feedback</li>
+                <li>✅ <strong>Success/Error:</strong> Chord progressions</li>
+                <li>✅ <strong>3D Models:</strong> Unique sound per model type</li>
+                <li>✅ <strong>Scroll Events:</strong> Subtle pitch changes</li>
+            </ul>
+        </div>
+    </section>
+
+    <!-- Text Effects -->
+    <section style="margin-bottom: 4rem;">
+        <h2 style="text-align: center; margin-bottom: 2rem; color: var(--primary);">
+            ✍️ Text & Typography Effects
+        </h2>
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 2rem;">
+            
+            <div class="glass-card" style="padding: 2rem; text-align: center;">
+                <h3 class="glow-text" style="font-size: 2rem; margin-bottom: 1rem;">
+                    Glowing Text
+                </h3>
+                <p style="color: #9ca3af;">
+                    Use class="glow-text" for pulsing glow effect
+                </p>
+            </div>
+
+            <div class="glass-card" style="padding: 2rem; text-align: center;">
+                <h3 style="font-size: 2rem; margin-bottom: 1rem;">
+                    Glitch on Hover
+                </h3>
+                <p style="color: #9ca3af;">
+                    Hover over headers for glitch animation
+                </p>
+            </div>
+
+        </div>
+    </section>
+
+    <!-- Feature Summary -->
+    <section style="margin-bottom: 4rem;">
+        <div class="glass-card" style="padding: 3rem; text-align: center;">
+            <h2 style="color: var(--primary); margin-bottom: 2rem;">
+                🎉 Complete Feature List
+            </h2>
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 1.5rem; text-align: left;">
+                <div>
+                    <h4 style="color: var(--primary); margin-bottom: 0.5rem;">Visual Effects</h4>
+                    <ul style="color: #9ca3af; font-size: 0.9rem; line-height: 1.8;">
+                        <li>Custom cursor + trails</li>
+                        <li>3D card tilt</li>
+                        <li>Mouse-following glow</li>
+                        <li>Particle systems</li>
+                        <li>Floating elements</li>
+                        <li>Ripple effects</li>
+                        <li>Badge shimmer</li>
+                        <li>Text glow/glitch</li>
+                    </ul>
+                </div>
+                <div>
+                    <h4 style="color: var(--primary); margin-bottom: 0.5rem;">3D Models</h4>
+                    <ul style="color: #9ca3af; font-size: 0.9rem; line-height: 1.8;">
+                        <li>Interactive Avatar</li>
+                        <li>Rocket (bouncing)</li>
+                        <li>Diamond (glowing)</li>
+                        <li>Portal (rotating)</li>
+                        <li>Gear widget</li>
+                        <li>Trophy widget</li>
+                        <li>Chart widget</li>
+                        <li>All draggable</li>
+                    </ul>
+                </div>
+                <div>
+                    <h4 style="color: var(--primary); margin-bottom: 0.5rem;">Interactions</h4>
+                    <ul style="color: #9ca3af; font-size: 0.9rem; line-height: 1.8;">
+                        <li>Magnetic buttons</li>
+                        <li>Click shockwave</li>
+                        <li>Scroll parallax</li>
+                        <li>Scroll reveal</li>
+                        <li>Nav sparkles</li>
+                        <li>Hover animations</li>
+                        <li>Loading spinners</li>
+                        <li>Form feedback</li>
+                    </ul>
+                </div>
+                <div>
+                    <h4 style="color: var(--primary); margin-bottom: 0.5rem;">Sound Design</h4>
+                    <ul style="color: #9ca3af; font-size: 0.9rem; line-height: 1.8;">
+                        <li>Button sounds</li>
+                        <li>Navigation whoosh</li>
+                        <li>Card interactions</li>
+                        <li>Form feedback</li>
+                        <li>Success/error chords</li>
+                        <li>Model clicks</li>
+                        <li>Scroll tones</li>
+                        <li>Toggle control</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Call to Action -->
+    <div style="text-align: center; padding: 3rem 1rem;">
+        <h2 style="margin-bottom: 1rem;">Ready to explore?</h2>
+        <p style="color: #9ca3af; margin-bottom: 2rem;">
+            Try interacting with all the elements above!
+        </p>
+        <div style="display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap;">
+            <a href="/dashboard" class="btn btn-primary">Go to Dashboard</a>
+            <a href="/portfolio" class="btn btn-secondary">View Portfolio</a>
+            <a href="/gap-analysis" class="btn btn-primary">Gap Analysis</a>
+        </div>
+    </div>
+
+</div>
+{% endblock %}

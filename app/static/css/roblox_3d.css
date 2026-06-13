@@ -1,0 +1,911 @@
+/* ═══════════════════════════════════════════════════════════════════════
+   SkillSphere AI — Modern Roblox 3D Theme Styles
+   ═══════════════════════════════════════════════════════════════════════ */
+
+@import url('https://fonts.googleapis.com/css2?family=Nunito:wght@700;800;900&display=swap');
+
+:root {
+    /* Authentic Roblox Palette */
+    --bg-primary: #393b3d;      /* Classic Roblox dark gray */
+    --bg-secondary: #232527;    /* Darker gray for contrast */
+    --bg-tertiary: #2c2d2f;     /* Medium gray */
+    --surface: #4a4c4f;
+    --surface-hover: #565a5e;
+    --surface-active: #393b3d;
+    --border: #191a1b;
+    --border-hover: #00b06f;    /* Roblox green glow */
+
+    /* Typography - Gotham/Nunito Bold (closest to Roblox) */
+    --font-heading: 'Nunito', 'Arial Black', sans-serif;
+    --font-body: 'Nunito', Arial, sans-serif;
+
+    /* Authentic Roblox Theme Colors */
+    --primary: #00b06f;         /* Roblox Green */
+    --secondary: #0074bd;       /* Roblox Blue */
+    --success: #02b757;         /* Success Green */
+    --warning: #ffcb00;         /* Warning Yellow */
+    --danger: #e11d48;          /* Danger Red */
+    --info: #00a2ff;            /* Info Blue */
+    --text-primary: #ffffff;
+    --text-secondary: #bbbcbe;
+    --text-accent: #00b06f;
+
+    /* Roblox Flat Gradients (Minimal) */
+    --gradient-primary: linear-gradient(180deg, #00b06f 0%, #00965d 100%);
+    --gradient-secondary: linear-gradient(180deg, #0074bd 0%, #005a94 100%);
+    --gradient-danger: linear-gradient(180deg, #e11d48 0%, #be123c 100%);
+    --gradient-mesh: none;
+
+    /* Roblox Border Radius (Blocky) */
+    --radius-sm: 4px;
+    --radius-md: 8px;
+    --radius-lg: 12px;
+    --radius-xl: 16px;
+    --radius-full: 9999px;
+
+    /* Roblox UI Effects (No glass, solid backgrounds) */
+    --glass-bg: #2c2d2f;
+    --glass-border: #191a1b;
+    --glass-blur: 0px;
+
+    /* Timing */
+    --ease-out: cubic-bezier(0.25, 1, 0.5, 1);
+    --ease-spring: cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+/* ─── Custom Native Cursors ────────────────────────────────────────── */
+body, html, input, textarea {
+    cursor: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='28' height='28' viewBox='0 0 28 28'><path d='M2,2 L2,23 L8,18 L13,27 L17,25 L12,16 L19,16 Z' fill='white' stroke='%230a0d16' stroke-width='2.5' stroke-linejoin='round'/></svg>") 2 2, auto !important;
+}
+
+a, button, select, input[type="submit"], input[type="button"], [role="button"], .navbar-brand, .sidebar-nav li a, .mobile-toggle, .sound-toggle-btn {
+    cursor: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='28' height='28' viewBox='0 0 28 28'><path d='M8,2 L14,14 L11,15 L15,22 L13,23 L9,16 L6,18 Z' fill='white' stroke='%23e22030' stroke-width='2.5' stroke-linejoin='round'/></svg>") 6 2, pointer !important;
+}
+
+iframe, canvas {
+    cursor: grab !important;
+}
+iframe:active, canvas:active {
+    cursor: grabbing !important;
+}
+
+@keyframes cursorTrailFade {
+    0% {
+        transform: scale(1) rotate(0deg);
+        opacity: 0.8;
+    }
+    100% {
+        transform: scale(0.3) rotate(45deg);
+        opacity: 0;
+    }
+}
+
+/* ─── Global & Font Overrides (Roblox Style) ───────────────────────── */
+body {
+    font-family: 'Nunito', Arial, sans-serif !important;
+    background: var(--bg-primary) !important;
+    background-image: none !important;
+    overflow-x: hidden;
+    color: var(--text-primary);
+}
+
+h1, h2, h3, h4, h5, h6 {
+    font-family: 'Nunito', 'Arial Black', sans-serif !important;
+    font-weight: 800 !important;
+    text-transform: none;
+    letter-spacing: 0.5px;
+}
+
+button, input, select, textarea, span, p, a, div {
+    font-family: 'Nunito', Arial, sans-serif !important;
+    font-weight: 700;
+}
+
+/* ─── Roblox Scrollbars (Blocky) ───────────────────────────────────── */
+::-webkit-scrollbar {
+    width: 14px;
+    height: 14px;
+}
+::-webkit-scrollbar-track {
+    background: var(--bg-secondary);
+    border: 2px solid var(--border);
+}
+::-webkit-scrollbar-thumb {
+    background: var(--surface);
+    border: 2px solid var(--border);
+    border-radius: 0;
+}
+::-webkit-scrollbar-thumb:hover {
+    background: var(--surface-hover);
+}
+::-webkit-scrollbar-corner {
+    background: var(--bg-secondary);
+}
+
+/* ─── Roblox Blocky Cards (No Tilt, Bold Borders) ───────────────────── */
+.glass-card, .stat-card, .index-card {
+    position: relative;
+    background: var(--bg-tertiary) !important;
+    border: 3px solid var(--border) !important;
+    border-radius: var(--radius-md) !important;
+    box-shadow: 0 4px 0 var(--border) !important;
+    transition: transform 0.1s ease-out, box-shadow 0.1s ease-out, border-color 0.15s ease-out !important;
+    transform-style: flat !important;
+    overflow: hidden !important;
+}
+
+/* Roblox Hover Effect (Lift + Green Border) */
+.glass-card::before, .stat-card::before, .index-card::before {
+    content: '';
+    position: absolute;
+    top: -3px; left: -3px; right: -3px; bottom: -3px;
+    border-radius: inherit;
+    border: 3px solid var(--primary);
+    opacity: 0;
+    transition: opacity 0.2s ease;
+    pointer-events: none;
+    z-index: 1;
+}
+
+.glass-card:hover, .stat-card:hover, .index-card:hover {
+    border-color: var(--primary) !important;
+    box-shadow: 0 6px 0 var(--border) !important;
+    transform: translateY(-2px) !important;
+}
+
+.glass-card:hover::before, .stat-card:hover::before, .index-card:hover::before {
+    opacity: 1;
+}
+
+.glass-card:active, .stat-card:active, .index-card:active {
+    transform: translateY(2px) !important;
+    box-shadow: 0 2px 0 var(--border) !important;
+}
+
+/* Roblox card content (no 3D transform) */
+.glass-card > *, .stat-card > *, .index-card > * {
+    position: relative;
+    z-index: 2;
+}
+
+/* Roblox shine effect on hover */
+.glass-card::after, .stat-card::after, .index-card::after {
+    content: '';
+    position: absolute;
+    width: 50%;
+    height: 100%;
+    top: 0;
+    left: -50%;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.15), transparent);
+    transition: left 0.5s ease;
+    pointer-events: none;
+    z-index: 3;
+}
+
+.glass-card:hover::after, .stat-card:hover::after, .index-card:hover::after {
+    left: 100%;
+}
+
+/* ─── 3D Canvas Background ─────────────────────────────────────────── */
+#threejs-bg {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: -1;
+    pointer-events: none;
+    opacity: 0.35;
+}
+
+/* ─── Roblox Navigation (Solid, Bold) ──────────────────────────────── */
+.navbar {
+    background: var(--bg-secondary) !important;
+    border-bottom: 4px solid var(--border) !important;
+    backdrop-filter: none !important;
+    position: relative;
+    z-index: 1000;
+    box-shadow: 0 2px 0 rgba(0, 0, 0, 0.3);
+}
+
+/* Roblox Square Logo (No tilt, solid) */
+.navbar-brand .logo {
+    background: var(--primary) !important;
+    border-radius: 4px !important;
+    transform: rotate(0deg);
+    box-shadow: 0 3px 0 #00965d, inset 0 1px 0 rgba(255, 255, 255, 0.3);
+    transition: transform 0.1s ease, box-shadow 0.1s ease;
+    font-size: 1.15rem;
+    border: 2px solid #007a4d;
+    animation: none;
+}
+.navbar-brand:hover .logo {
+    transform: translateY(-2px);
+    box-shadow: 0 5px 0 #00965d, inset 0 1px 0 rgba(255, 255, 255, 0.3);
+}
+.navbar-brand:active .logo {
+    transform: translateY(1px);
+    box-shadow: 0 1px 0 #00965d, inset 0 1px 0 rgba(255, 255, 255, 0.3);
+}
+
+.navbar-nav a {
+    position: relative;
+    transition: all 0.15s ease;
+    border-radius: var(--radius-sm) !important;
+    padding: 0.5rem 1rem !important;
+    margin: 0 0.25rem;
+    border: 2px solid transparent;
+    background: transparent;
+    color: var(--text-secondary) !important;
+}
+
+.navbar-nav a:hover {
+    background: var(--surface) !important;
+    border-color: var(--border) !important;
+    color: var(--text-primary) !important;
+    box-shadow: 0 2px 0 var(--border);
+}
+
+.navbar-nav a.active {
+    color: #ffffff !important;
+    background: var(--primary) !important;
+    border: 2px solid #007a4d !important;
+    box-shadow: 0 3px 0 #00965d, inset 0 1px 0 rgba(255, 255, 255, 0.3) !important;
+}
+
+.navbar-nav a:active {
+    transform: translateY(1px);
+    box-shadow: 0 1px 0 var(--border) !important;
+}
+
+/* ─── Roblox Sound Toggle Button ──────────────────────────────────── */
+.sound-toggle-btn {
+    background: var(--surface);
+    border: 2px solid var(--border);
+    color: var(--text-primary);
+    padding: 0.5rem 1rem;
+    border-radius: var(--radius-sm);
+    font-size: 0.875rem;
+    font-weight: 700;
+    transition: all 0.1s ease;
+    margin-right: 1rem;
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+    box-shadow: 0 2px 0 var(--border);
+}
+.sound-toggle-btn:hover {
+    background: var(--surface-hover);
+    border-color: var(--primary);
+    transform: translateY(-1px);
+    box-shadow: 0 3px 0 var(--border);
+}
+.sound-toggle-btn:active {
+    transform: translateY(1px);
+    box-shadow: 0 1px 0 var(--border);
+}
+.sound-toggle-btn.muted {
+    opacity: 0.6;
+}
+
+/* ─── Roblox Input Fields (Bold Borders) ───────────────────────────── */
+.form-control, select, input, textarea {
+    background-color: var(--bg-secondary) !important;
+    border: 3px solid var(--border) !important;
+    border-radius: var(--radius-sm) !important;
+    color: var(--text-primary) !important;
+    box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.5);
+    transition: border-color 0.15s ease;
+    padding: 0.75rem 1rem !important;
+    font-weight: 700;
+}
+.form-control:focus, select:focus, input:focus, textarea:focus {
+    border-color: var(--primary) !important;
+    box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.5), 0 0 0 3px rgba(0, 176, 111, 0.2) !important;
+    outline: none;
+    background-color: var(--bg-tertiary) !important;
+}
+
+/* ─── Roblox Buttons (Flat with Bold Borders) ──────────────────────── */
+.btn {
+    border-radius: var(--radius-sm) !important;
+    font-weight: 800 !important;
+    text-transform: none;
+    letter-spacing: 0.5px;
+    border: 3px solid transparent !important;
+    transition: all 0.1s ease !important;
+    padding: 0.75rem 1.5rem !important;
+    font-size: 1rem !important;
+    position: relative;
+}
+
+.btn-primary {
+    background: var(--primary) !important;
+    border-color: #007a4d !important;
+    color: #ffffff !important;
+    box-shadow: 0 4px 0 #00965d, inset 0 1px 0 rgba(255, 255, 255, 0.3) !important;
+}
+.btn-primary:hover {
+    background: #00c97f !important;
+    transform: translateY(-2px);
+    box-shadow: 0 6px 0 #00965d, inset 0 1px 0 rgba(255, 255, 255, 0.3) !important;
+}
+.btn-primary:active {
+    transform: translateY(2px);
+    box-shadow: 0 2px 0 #00965d, inset 0 1px 0 rgba(255, 255, 255, 0.3) !important;
+}
+
+.btn-secondary {
+    background: var(--surface) !important;
+    border-color: var(--border) !important;
+    color: var(--text-primary) !important;
+    box-shadow: 0 3px 0 var(--border) !important;
+}
+.btn-secondary:hover {
+    background: var(--surface-hover) !important;
+    transform: translateY(-2px);
+    box-shadow: 0 5px 0 var(--border) !important;
+}
+.btn-secondary:active {
+    transform: translateY(1px);
+    box-shadow: 0 1px 0 var(--border) !important;
+}
+
+/* ─── Roblox 3D Model Container (Solid Background) ─────────────────── */
+.roblox-3d-model {
+    position: relative;
+    width: 100%;
+    height: 320px;
+    background: var(--bg-secondary);
+    border: 3px solid var(--border);
+    border-radius: var(--radius-md);
+    overflow: hidden;
+    box-shadow: inset 0 2px 8px rgba(0, 0, 0, 0.4);
+    transition: transform 0.1s ease, box-shadow 0.1s ease;
+}
+.roblox-3d-model:hover {
+    border-color: var(--primary);
+}
+
+/* Small 3D Icon containers inside stat cards */
+.stat-card .roblox-3d-model {
+    width: 64px;
+    height: 64px;
+    background: var(--bg-primary);
+    margin-bottom: 0.5rem;
+    border-width: 2px;
+}
+
+/* ─── Roblox Bullet Icon ──────────────────────────────────────────── */
+.roblox-bullet {
+    display: inline-block;
+    width: 12px;
+    height: 12px;
+    background: var(--primary);
+    transform: rotate(15deg);
+    margin-right: 8px;
+    flex-shrink: 0;
+    box-shadow: 0 0 8px var(--primary);
+}
+
+/* ─── Roblox Progress Bars (Flat with Border) ──────────────────────── */
+.progress-fill {
+    background: var(--primary) !important;
+    box-shadow: inset 0 2px 0 rgba(255, 255, 255, 0.3), inset 0 -2px 0 rgba(0, 0, 0, 0.2);
+    border-radius: 2px;
+}
+
+/* ─── Roblox Bullet Icon (Perfect Square) ──────────────────────────── */
+.roblox-bullet {
+    display: inline-block;
+    width: 10px;
+    height: 10px;
+    background: var(--primary);
+    transform: rotate(0deg);
+    margin-right: 8px;
+    flex-shrink: 0;
+    border: 2px solid rgba(0, 0, 0, 0.3);
+    box-shadow: none;
+}
+
+/* ─── Roblox Badge/Pill Style ──────────────────────────────────────── */
+.badge, .skill-tag {
+    border-radius: var(--radius-full);
+    padding: 0.35rem 0.85rem;
+    font-weight: 800;
+    font-size: 0.875rem;
+    border: 2px solid rgba(0, 0, 0, 0.2);
+    background: var(--surface);
+    color: var(--text-primary);
+    box-shadow: 0 2px 0 rgba(0, 0, 0, 0.2);
+    transition: all 0.1s ease;
+}
+
+.badge:hover, .skill-tag:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 3px 0 rgba(0, 0, 0, 0.2);
+}
+
+/* ─── Roblox Loading Spinner (Blocky) ──────────────────────────────── */
+.roblox-spinner {
+    width: 50px;
+    height: 50px;
+    position: relative;
+    margin: 20px auto;
+}
+
+.roblox-spinner-cube {
+    width: 18px;
+    height: 18px;
+    background: var(--primary);
+    position: absolute;
+    border: 2px solid rgba(0, 0, 0, 0.3);
+    animation: spinnerCube 1.5s infinite ease-in-out;
+}
+
+.roblox-spinner-cube:nth-child(1) {
+    top: 0;
+    left: 0;
+    animation-delay: 0s;
+}
+
+.roblox-spinner-cube:nth-child(2) {
+    top: 0;
+    right: 0;
+    animation-delay: 0.15s;
+}
+
+.roblox-spinner-cube:nth-child(3) {
+    bottom: 0;
+    left: 0;
+    animation-delay: 0.3s;
+}
+
+.roblox-spinner-cube:nth-child(4) {
+    bottom: 0;
+    right: 0;
+    animation-delay: 0.45s;
+}
+
+@keyframes spinnerCube {
+    0%, 100% {
+        transform: scale(1);
+        opacity: 1;
+    }
+    50% {
+        transform: scale(0.6);
+        opacity: 0.7;
+    }
+}
+
+/* ─── Roblox Button Ripple (Simple) ────────────────────────────────── */
+.btn {
+    position: relative;
+    overflow: hidden;
+}
+
+.btn::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 0;
+    height: 0;
+    border-radius: 0%;
+    background: rgba(255, 255, 255, 0.4);
+    transform: translate(-50%, -50%);
+    transition: width 0.3s ease, height 0.3s ease;
+}
+
+.btn:active::after {
+    width: 200px;
+    height: 200px;
+}
+
+/* ─── Roblox Selection Highlight ───────────────────────────────────── */
+::selection {
+    background: var(--primary);
+    color: white;
+}
+
+::-moz-selection {
+    background: var(--primary);
+    color: white;
+}
+
+/* ─── Roblox Ticker Tape (Solid) ───────────────────────────────────── */
+.ticker-wrap {
+    position: relative;
+    overflow: hidden;
+    background: var(--bg-secondary);
+    border-top: 2px solid var(--border);
+    border-bottom: 2px solid var(--border);
+}
+
+.ticker-wrap::before,
+.ticker-wrap::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    width: 80px;
+    height: 100%;
+    z-index: 10;
+    pointer-events: none;
+}
+
+.ticker-wrap::before {
+    left: 0;
+    background: linear-gradient(90deg, var(--bg-secondary) 0%, transparent 100%);
+}
+
+.ticker-wrap::after {
+    right: 0;
+    background: linear-gradient(270deg, var(--bg-secondary) 0%, transparent 100%);
+}
+
+/* ─── App Layout Styles ────────────────────────────────────────── */
+.app-layout {
+    display: flex;
+    min-height: 100vh;
+    position: relative;
+    background: var(--bg-primary);
+}
+
+.sidebar {
+    width: 260px;
+    background: #111625 !important; /* Roblox Developer Portal deep dark grey-blue */
+    border-right: 2px solid rgba(255, 255, 255, 0.05);
+    display: flex;
+    flex-direction: column;
+    padding: 1.5rem;
+    flex-shrink: 0;
+    transition: transform 0.3s ease;
+}
+
+.sidebar-brand {
+    display: flex;
+    align-items: center;
+    margin-bottom: 2.5rem;
+}
+
+.sidebar-brand .logo {
+    font-size: 1.75rem;
+    color: #ff4b57; /* Vibrant Roblox red */
+    transform: rotate(-10deg);
+    margin-right: 0.75rem;
+    text-shadow: 0 0 10px rgba(255, 75, 87, 0.4);
+}
+
+.sidebar-brand .brand-text {
+    font-family: var(--font-heading);
+    font-size: 1.25rem;
+    font-weight: 900;
+    color: #ffffff;
+    letter-spacing: 0.5px;
+}
+
+.sidebar-nav {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    flex: 1;
+}
+
+.sidebar-nav li a {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 0.8rem 1.2rem;
+    color: #9ca3af;
+    font-weight: 700;
+    border-radius: var(--radius-sm);
+    text-decoration: none;
+    transition: all 0.2s ease;
+}
+
+.sidebar-nav li a:hover {
+    color: #ffffff;
+    background: rgba(255, 255, 255, 0.03);
+    transform: translateX(3px);
+}
+
+.sidebar-nav li a.active, .sidebar-nav li a:active {
+    color: #ffffff !important;
+    background: #ff4b57 !important; /* Roblox Red highlight */
+    box-shadow: 0 4px 15px rgba(255, 75, 87, 0.3);
+}
+
+.sidebar-footer {
+    padding-top: 1rem;
+    border-top: 1px solid rgba(255, 255, 255, 0.05);
+    display: flex;
+    flex-direction: column;
+    gap: 0.1rem;
+}
+
+.sidebar-footer .friendly-tag {
+    font-size: 0.65rem;
+    color: #6b7280;
+    text-transform: uppercase;
+    font-weight: 800;
+}
+
+.sidebar-footer .roblox-portal-tag {
+    font-family: var(--font-heading);
+    font-size: 1.15rem;
+    font-weight: 900;
+    color: #ffffff;
+    letter-spacing: 1px;
+}
+
+.sidebar-footer .portal-subtag {
+    font-size: 0.6rem;
+    color: #9ca3af;
+    letter-spacing: 1.5px;
+    font-weight: 700;
+}
+
+.main-wrapper {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+    position: relative;
+    min-width: 0; /* Prevents layout overflow */
+}
+
+.top-header {
+    height: 64px;
+    background: rgba(17, 22, 37, 0.85); /* Semitransparent header */
+    backdrop-filter: blur(10px);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 2rem;
+    position: sticky;
+    top: 0;
+    z-index: 900;
+}
+
+.header-left {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    flex: 1;
+}
+
+.mobile-toggle {
+    display: none;
+    background: none;
+    border: none;
+    color: #ffffff;
+    font-size: 1.5rem;
+}
+
+.search-bar {
+    display: flex;
+    align-items: center;
+    background: #0f1322;
+    border: 1px solid rgba(255, 255, 255, 0.06);
+    border-radius: var(--radius-sm);
+    padding: 0.4rem 0.8rem;
+    width: 100%;
+    max-width: 380px;
+}
+
+.search-icon {
+    color: #6b7280;
+    margin-right: 0.5rem;
+    font-size: 0.85rem;
+}
+
+.search-bar input {
+    background: none !important;
+    border: none !important;
+    color: #ffffff !important;
+    font-size: 0.85rem;
+    width: 100%;
+    outline: none !important;
+    box-shadow: none !important;
+    padding: 0 !important;
+}
+
+.header-right {
+    display: flex;
+    align-items: center;
+}
+
+/* Responsive Layout for Sidebar */
+@media (max-width: 1024px) {
+    .sidebar {
+        position: fixed !important;
+        top: 0;
+        bottom: 0;
+        left: 0;
+        z-index: 1000;
+        transform: translateX(-100%);
+    }
+    .sidebar.active {
+        transform: translateX(0);
+    }
+    .main-wrapper {
+        margin-left: 0 !important;
+        width: 100%;
+    }
+    .mobile-toggle {
+        display: block;
+    }
+}
+
+/* ─── Vibrant & Colorful Theme Accents ───────────────────────────── */
+:root {
+    /* Upgrade to more vibrant light overlays */
+    --gradient-mesh: radial-gradient(at 10% 20%, rgba(255, 75, 87, 0.18) 0px, transparent 50%),
+                     radial-gradient(at 90% 10%, rgba(59, 130, 246, 0.18) 0px, transparent 50%),
+                     radial-gradient(at 50% 80%, rgba(16, 185, 129, 0.12) 0px, transparent 50%);
+}
+
+/* Stat Card colorful borders & glows */
+.stat-card.red::before {
+    background: radial-gradient(circle 120px at var(--mouse-x, -999px) var(--mouse-y, -999px), rgba(255, 75, 87, 0.9) 0%, rgba(255, 75, 87, 0.2) 60%, transparent 100%);
+}
+.stat-card.blue::before {
+    background: radial-gradient(circle 120px at var(--mouse-x, -999px) var(--mouse-y, -999px), rgba(59, 130, 246, 0.9) 0%, rgba(59, 130, 246, 0.2) 60%, transparent 100%);
+}
+.stat-card.gold::before {
+    background: radial-gradient(circle 120px at var(--mouse-x, -999px) var(--mouse-y, -999px), rgba(245, 158, 11, 0.9) 0%, rgba(245, 158, 11, 0.2) 60%, transparent 100%);
+}
+.stat-card.green::before {
+    background: radial-gradient(circle 120px at var(--mouse-x, -999px) var(--mouse-y, -999px), rgba(16, 185, 129, 0.9) 0%, rgba(16, 185, 129, 0.2) 60%, transparent 100%);
+}
+
+/* Skill Cards with colorful gradient backgrounds (Roblox style) */
+.roblox-skill-card {
+    position: relative;
+    padding: 1.25rem;
+    border-radius: var(--radius-md);
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    background: #161b2e;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    height: 140px;
+    transition: transform 0.2s var(--ease-spring), box-shadow 0.2s;
+    transform-style: preserve-3d;
+    perspective: 1000px;
+}
+
+.roblox-skill-card:hover {
+    transform: translateY(-5px) scale(1.03);
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.4);
+}
+
+/* Gradient Background Panels on Skill Cards */
+.roblox-skill-card.c-red { border-left: 4px solid #ff4b57; }
+.roblox-skill-card.c-blue { border-left: 4px solid #3b82f6; }
+.roblox-skill-card.c-green { border-left: 4px solid #10b981; }
+.roblox-skill-card.c-gold { border-left: 4px solid #f59e0b; }
+.roblox-skill-card.c-purple { border-left: 4px solid #8b5cf6; }
+.roblox-skill-card.c-orange { border-left: 4px solid #ff7c00; }
+
+.roblox-skill-card .card-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 0.5rem;
+}
+
+.roblox-skill-card .skill-icon-bg {
+    width: 36px;
+    height: 36px;
+    background: rgba(255, 255, 255, 0.04);
+    border: 1px solid rgba(255, 255, 255, 0.06);
+    border-radius: var(--radius-sm);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.15rem;
+}
+
+.roblox-skill-card .skill-title {
+    font-size: 1rem;
+    font-weight: 800;
+    color: #ffffff;
+}
+
+.roblox-skill-card .skill-stats {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    font-size: 0.75rem;
+    color: #9ca3af;
+    border-top: 1px solid rgba(255, 255, 255, 0.05);
+    padding-top: 0.5rem;
+}
+
+.roblox-skill-card .stat-badge {
+    background: rgba(0, 0, 0, 0.25);
+    padding: 0.2rem 0.5rem;
+    border-radius: var(--radius-sm);
+    font-weight: 700;
+}
+
+/* Roblox Developer Portal buttons */
+.btn-roblox-red {
+    background: linear-gradient(180deg, #ff4b57 0%, #d0202d 100%) !important;
+    color: #ffffff !important;
+    border: 1px solid #7c0c16 !important;
+    box-shadow: 0 4px 0 #7c0c16, 0 4px 10px rgba(255, 75, 87, 0.3) !important;
+    font-family: var(--font-heading) !important;
+    text-transform: uppercase;
+}
+.btn-roblox-red:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 0 #7c0c16, 0 6px 12px rgba(255, 75, 87, 0.4) !important;
+}
+.btn-roblox-red:active {
+    transform: translateY(2px);
+    box-shadow: 0 0px 0 #7c0c16 !important;
+}
+
+.btn-roblox-grey {
+    background: linear-gradient(180deg, #515457 0%, #353738 100%) !important;
+    color: #ffffff !important;
+    border: 1px solid #1f2021 !important;
+    box-shadow: 0 4px 0 #1f2021, 0 4px 10px rgba(0, 0, 0, 0.3) !important;
+    font-family: var(--font-heading) !important;
+    text-transform: uppercase;
+}
+.btn-roblox-grey:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 0 #1f2021, 0 6px 12px rgba(0, 0, 0, 0.4) !important;
+}
+.btn-roblox-grey:active {
+    transform: translateY(2px);
+    box-shadow: 0 0px 0 #1f2021 !important;
+}
+
+/* Activity Log items */
+.activity-log-item {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    padding: 0.75rem 1rem;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+    transition: background 0.15s;
+}
+.activity-log-item:hover {
+    background: rgba(255, 255, 255, 0.02);
+}
+.activity-log-item:last-child {
+    border-bottom: none;
+}
+.activity-icon-block {
+    width: 32px;
+    height: 32px;
+    background: var(--surface);
+    border: 1px solid rgba(255,255,255,0.06);
+    border-radius: var(--radius-sm);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1rem;
+}
+.activity-details {
+    flex: 1;
+}
+.activity-title {
+    font-size: 0.85rem;
+    font-weight: 700;
+    color: #ffffff;
+}
+.activity-date {
+    font-size: 0.7rem;
+    color: #6b7280;
+}
+

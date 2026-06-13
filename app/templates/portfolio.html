@@ -1,0 +1,232 @@
+{% extends "base.html" %}
+{% block title %}Skill Portfolio{% endblock %}
+
+{% block head %}
+<style>
+.flashcard-container {
+    perspective: 1000px;
+    width: 100%;
+    height: 220px;
+    cursor: pointer;
+}
+.flashcard {
+    width: 100%;
+    height: 100%;
+    position: relative;
+    transform-style: preserve-3d;
+    transition: transform 0.6s var(--ease-spring);
+    box-shadow: var(--shadow-md);
+    border-radius: var(--radius-lg);
+}
+.flashcard.flipped {
+    transform: rotateY(180deg);
+}
+.flashcard-front, .flashcard-back {
+    position: absolute;
+    inset: 0;
+    backface-visibility: hidden;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 1.5rem;
+    border-radius: var(--radius-lg);
+    border: 1px solid var(--border);
+    text-align: center;
+}
+.flashcard-front {
+    background: var(--bg-tertiary);
+    color: var(--text-primary);
+    font-weight: 700;
+    font-size: 1.1rem;
+}
+.flashcard-back {
+    background: var(--surface-hover);
+    color: var(--text-primary);
+    transform: rotateY(180deg);
+    font-size: 0.9375rem;
+    line-height: 1.6;
+}
+.study-resource-item {
+    border: 1px solid var(--border);
+    border-radius: var(--radius-md);
+    padding: 1rem;
+    background: var(--surface);
+    transition: all 0.2s var(--ease-out);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+.study-resource-item:hover {
+    border-color: var(--text-accent);
+    background: var(--surface-hover);
+}
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="page-header">
+        <h1>Skill Portfolio</h1>
+        <p>Manage your skills and track your portfolio score</p>
+    </div>
+
+    <div class="grid-2" style="grid-template-columns: 300px 1fr;">
+        <!-- Score Gauge -->
+        <div class="glass-card animate-in" style="text-align: center;">
+            <div class="score-gauge">
+                <svg viewBox="0 0 200 200">
+                    <defs>
+                        <linearGradient id="gaugeGradient" x1="0%" y1="0%" x2="100%" y2="0%">
+                            <stop offset="0%" stop-color="#4F46E5"/>
+                            <stop offset="100%" stop-color="#A855F7"/>
+                        </linearGradient>
+                    </defs>
+                    <circle class="gauge-bg" cx="100" cy="100" r="85"/>
+                    <circle class="gauge-fill" id="gaugeCircle" cx="100" cy="100" r="85"
+                            stroke-dasharray="534" stroke-dashoffset="534"/>
+                </svg>
+                <div class="score-text">
+                    <div class="score-number" id="portfolioScoreValue">0</div>
+                    <div class="score-label">Portfolio Score</div>
+                </div>
+            </div>
+            <div class="mt-2" id="portfolioGrade" style="font-size: 1.25rem; font-weight: 700;"></div>
+            <div class="mt-1 text-secondary" style="font-size: 0.8125rem;" id="portfolioMeta"></div>
+        </div>
+
+        <!-- GitHub Integration -->
+        <div class="glass-card animate-in mt-2" style="text-align: center; padding: 1.25rem;">
+            <h4 class="mb-1" style="font-size: 0.875rem; color: var(--text-primary); display: flex; align-items: center; justify-content: center; gap: 0.35rem;">
+                <span>🐙</span> GitHub Verification
+            </h4>
+            <p class="text-secondary mb-2" style="font-size: 0.75rem;">Verify skills by analyzing your public repos</p>
+            <div class="flex gap-sm">
+                <input type="text" id="githubUsernameInput" class="form-control form-control-sm" placeholder="username" style="font-size: 0.8125rem; padding: 0.5rem 0.75rem;">
+                <button class="btn btn-secondary btn-sm" onclick="verifyGitHubSkills()" id="githubVerifyBtn">Verify</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="glass-card animate-in">
+        <!-- Add Skills -->
+        <div class="mb-3">
+            <h3 class="mb-2">Add Skills to Portfolio</h3>
+            <div class="flex gap-sm mb-2" style="flex-wrap: wrap;">
+                <select id="skillSelect" class="form-control" style="flex: 1; min-width: 200px;">
+                    <option value="">Select a skill...</option>
+                </select>
+                <input type="range" id="proficiencyRange" class="proficiency-slider" min="10" max="100" value="50"
+                       style="flex: 0.5; min-width: 120px;" oninput="document.getElementById('profVal').textContent = this.value + '%'">
+                <span id="profVal" style="font-size: 0.875rem; font-weight: 600; min-width: 45px;">50%</span>
+                <button class="btn btn-primary" onclick="addSkillToPortfolio()">Add</button>
+            </div>
+        </div>
+
+        <!-- View Tabs -->
+        <div class="tabs mb-2">
+            <button class="tab-btn active" id="listViewTab" onclick="switchPortfolioView('list')">📋 List View</button>
+            <button class="tab-btn" id="graphViewTab" onclick="switchPortfolioView('graph')">🕸️ Skill Graph</button>
+        </div>
+
+        <!-- List View Content -->
+        <div id="portfolioListView" class="tab-content active">
+            <h4 class="mb-1 mt-2" style="font-size: 0.875rem; color: var(--text-secondary);">YOUR SKILLS</h4>
+            <div id="userSkillsList">
+                <div class="empty-state">
+                    <div class="empty-icon">💼</div>
+                    <h3>No skills in portfolio</h3>
+                    <p>Select skills above to build your portfolio</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Graph View Content -->
+        <div id="portfolioGraphView" class="tab-content">
+            <h4 class="mb-1 mt-2" style="font-size: 0.875rem; color: var(--text-secondary);">KNOWLEDGE GRAPH NETWORK</h4>
+            <p class="text-secondary mb-2" style="font-size: 0.75rem;">Click/drag nodes to explore. Green nodes are your skills; blue nodes are related/target skills.</p>
+            <div id="skillGraphContainer"></div>
+        </div>
+    </div>
+</div>
+
+    <!-- Analysis Section -->
+    <div class="grid-3 mt-3">
+        <div class="glass-card animate-in">
+            <h3 class="mb-2" style="color: var(--success);">💪 Strengths</h3>
+            <div id="strengthsList">
+                <p class="text-secondary" style="font-size: 0.875rem;">Add skills to see your strengths</p>
+            </div>
+        </div>
+        <div class="glass-card animate-in">
+            <h3 class="mb-2" style="color: var(--warning);">⚠️ Weaknesses</h3>
+            <div id="weaknessesList">
+                <p class="text-secondary" style="font-size: 0.875rem;">Add skills to see weaknesses</p>
+            </div>
+        </div>
+        <div class="glass-card animate-in">
+            <h3 class="mb-2" style="color: var(--danger);">🔴 Missing Critical</h3>
+            <div id="missingList">
+                <p class="text-secondary" style="font-size: 0.875rem;">Critical skills you should learn</p>
+            </div>
+        </div>
+    </div>
+    <!-- Study Quest Modal -->
+    <div id="studyModal" class="loading-overlay hidden" style="display: none; align-items: center; justify-content: center; z-index: 2000;">
+        <div class="glass-card" style="width: 90%; max-width: 600px; padding: 2rem; position: relative; max-height: 90vh; overflow-y: auto;">
+            <button onclick="closeStudyModal()" style="position: absolute; top: 1rem; right: 1.5rem; background: none; border: none; font-size: 1.5rem; color: var(--text-secondary); cursor: pointer;">✕</button>
+            
+            <div class="flex items-center gap-md mb-2">
+                <div id="studySkillIcon" style="font-size: 2rem; background: rgba(79, 70, 229, 0.1); width: 50px; height: 50px; border-radius: var(--radius-md); display: flex; align-items: center; justify-content: center;">📘</div>
+                <div>
+                    <h2 id="studySkillName" class="text-gradient" style="font-size: 1.5rem; font-weight: 800;">Study Quest</h2>
+                    <span class="badge badge-purple" id="studySkillCategory" style="margin-top: 0.25rem;">Programming</span>
+                </div>
+            </div>
+            
+            <p id="studySkillDesc" class="text-secondary mb-3" style="font-size: 0.875rem; line-height: 1.5;"></p>
+            
+            <div class="tabs">
+                <button class="tab-btn active" id="tabStudy" onclick="switchStudyTab('study')">📚 Study Materials</button>
+                <button class="tab-btn" id="tabQuest" onclick="switchStudyTab('quest')">⚡ Flashcard Quest</button>
+            </div>
+            
+            <!-- Study Materials Tab -->
+            <div id="studyTabContent" class="tab-content active">
+                <div id="studyMaterialsList" class="flex flex-col" style="gap: 1rem;">
+                    <!-- Filled by JS -->
+                </div>
+            </div>
+            
+            <!-- Interactive Quest Tab -->
+            <div id="questTabContent" class="tab-content">
+                <div class="flex flex-col items-center justify-center" style="gap: 1.5rem; padding: 1rem 0;">
+                    <!-- Flashcard container -->
+                    <div class="flashcard-container" onclick="flipFlashcard()">
+                        <div class="flashcard" id="flashcardDeck">
+                            <div class="flashcard-front">
+                                <h4 id="cardQuestion">Question?</h4>
+                                <span class="text-secondary mt-3" style="font-size: 0.75rem; font-weight: 500;">(Click to flip and reveal answer)</span>
+                            </div>
+                            <div class="flashcard-back">
+                                <p id="cardAnswer">Answer details...</p>
+                                <span class="text-accent mt-3" style="font-size: 0.75rem; font-weight: 500;">(Click to flip back)</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="flex justify-between items-center" style="width: 100%; gap: 1rem; margin-top: 1rem;">
+                        <button class="btn btn-secondary btn-sm" onclick="prevFlashcard()">← Prev</button>
+                        <span id="flashcardProgress" class="text-secondary" style="font-size: 0.875rem; font-weight: 600;">Card 1 of 3</span>
+                        <button class="btn btn-secondary btn-sm" onclick="nextFlashcard()">Next →</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script src="/static/js/portfolio.js"></script>
+{% endblock %}

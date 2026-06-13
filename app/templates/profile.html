@@ -1,0 +1,107 @@
+{% extends "base.html" %}
+{% block title %}Profile{% endblock %}
+
+{% block content %}
+<div class="container" style="max-width: 680px;">
+    <div class="page-header">
+        <h1>Your Profile</h1>
+        <p>Update your information and career goals</p>
+    </div>
+
+    <div class="glass-card animate-in">
+        <form id="profileForm" onsubmit="handleProfileUpdate(event)">
+            <div class="form-group">
+                <label for="profileName">Full Name</label>
+                <input type="text" id="profileName" class="form-control" placeholder="Your name">
+            </div>
+            <div class="grid-2">
+                <div class="form-group">
+                    <label for="profileCollege">College / University</label>
+                    <input type="text" id="profileCollege" class="form-control" placeholder="MIT, Stanford...">
+                </div>
+                <div class="form-group">
+                    <label for="profileDegree">Degree</label>
+                    <input type="text" id="profileDegree" class="form-control" placeholder="B.Tech CS, MS AI...">
+                </div>
+            </div>
+            <div class="grid-2">
+                <div class="form-group">
+                    <label for="profileGradYear">Graduation Year</label>
+                    <input type="number" id="profileGradYear" class="form-control" placeholder="2025" min="1990" max="2035">
+                </div>
+                <div class="form-group">
+                    <label for="profileExperience">Experience Level</label>
+                    <select id="profileExperience" class="form-control">
+                        <option value="Beginner">Beginner (0-1 years)</option>
+                        <option value="Intermediate">Intermediate (1-3 years)</option>
+                        <option value="Advanced">Advanced (3-5 years)</option>
+                        <option value="Expert">Expert (5+ years)</option>
+                    </select>
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="profileGoal">Career Goal</label>
+                <select id="profileGoal" class="form-control">
+                    <option value="">Select your goal...</option>
+                    <option value="Machine Learning Engineer">Machine Learning Engineer</option>
+                    <option value="Data Scientist">Data Scientist</option>
+                    <option value="Cloud Architect">Cloud Architect</option>
+                    <option value="Full Stack Developer">Full Stack Developer</option>
+                    <option value="DevOps Engineer">DevOps Engineer</option>
+                    <option value="AI Engineer">AI Engineer</option>
+                    <option value="Data Engineer">Data Engineer</option>
+                    <option value="Cybersecurity Analyst">Cybersecurity Analyst</option>
+                </select>
+            </div>
+            <button type="submit" class="btn btn-primary btn-full btn-lg mt-2">
+                Save Profile
+            </button>
+        </form>
+    </div>
+
+    <div class="glass-card mt-3 animate-in" style="text-align: center;">
+        <button class="btn btn-danger" onclick="handleLogout()">Sign Out</button>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+document.addEventListener('DOMContentLoaded', async () => {
+    const user = await getUser();
+    if (!user) return window.location.href = '/login';
+
+    document.getElementById('profileName').value = user.name || '';
+    document.getElementById('profileCollege').value = user.college || '';
+    document.getElementById('profileDegree').value = user.degree || '';
+    document.getElementById('profileGradYear').value = user.graduation_year || '';
+    document.getElementById('profileExperience').value = user.experience_level || 'Beginner';
+    document.getElementById('profileGoal').value = user.career_goal || '';
+});
+
+async function handleProfileUpdate(e) {
+    e.preventDefault();
+    const data = {
+        name: document.getElementById('profileName').value,
+        college: document.getElementById('profileCollege').value,
+        degree: document.getElementById('profileDegree').value,
+        graduation_year: parseInt(document.getElementById('profileGradYear').value) || null,
+        experience_level: document.getElementById('profileExperience').value,
+        career_goal: document.getElementById('profileGoal').value,
+    };
+
+    try {
+        const res = await apiFetch('/api/auth/profile', { method: 'PUT', body: JSON.stringify(data) });
+        showToast('Profile updated successfully!', 'success');
+    } catch (err) {
+        showToast(err.message, 'error');
+    }
+}
+
+async function handleLogout() {
+    await apiFetch('/api/auth/logout', { method: 'POST' });
+    localStorage.removeItem('token');
+    window.location.href = '/';
+}
+</script>
+{% endblock %}

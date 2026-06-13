@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}SkillSphere AI{% endblock %} — Bloomberg for Skills</title>
+    <meta name="description" content="{% block meta_desc %}Track skill demand, discover emerging technologies, analyze skill gaps, and get AI-powered learning roadmaps.{% endblock %}">
+    <link rel="stylesheet" href="/static/css/styles.css">
+    <link rel="stylesheet" href="/static/css/roblox_3d.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.4/dist/chart.umd.min.js"></script>
+    <script src="https://unpkg.com/vis-network/standalone/umd/vis-network.min.js"></script>
+    <!-- Firebase SDK Compat -->
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-auth-compat.js"></script>
+    {% block head %}{% endblock %}
+
+</head>
+<body>
+    {% set is_public = request.url.path in ['/', '/login', '/signup', '/onboarding'] %}
+    <!-- Roblox Developer Portal App Layout -->
+    <div class="app-layout {% if is_public %}public-layout{% endif %}">
+        {% if not is_public %}
+        <!-- Sidebar Navigation -->
+        <aside class="sidebar" id="sidebar">
+            <div class="sidebar-brand">
+                <a href="/" style="display: flex; align-items: center; gap: 0.75rem; text-decoration: none;">
+                    <div class="logo" style="color: white; font-weight: 900;">⬚</div>
+                    <span class="brand-text">SkillSphere</span>
+                </a>
+            </div>
+            
+            <ul class="sidebar-nav">
+                <li><a href="/dashboard" id="side-nav-dashboard"><span class="icon">📊</span> Dashboard</a></li>
+                <li><a href="/portfolio" id="side-nav-portfolio"><span class="icon">💼</span> Portfolio</a></li>
+                <li><a href="/gap-analysis" id="side-nav-gap"><span class="icon">🎯</span> Gap Analysis</a></li>
+                <li><a href="/market" id="side-nav-market"><span class="icon">📈</span> Market Index</a></li>
+                <li><a href="/simulator" id="side-nav-simulator"><span class="icon">🚀</span> Simulator</a></li>
+                <li><a href="/profile" id="side-nav-profile"><span class="icon">⚙️</span> Settings</a></li>
+            </ul>
+
+            <div class="sidebar-footer">
+                <div class="friendly-tag">Friendly gaming</div>
+                <div class="roblox-portal-tag">ROBLOX</div>
+                <div class="portal-subtag">DEVELOPER PORTAL</div>
+            </div>
+        </aside>
+        {% endif %}
+
+        <!-- Main Content Wrapper -->
+        <div class="main-wrapper" {% if is_public %}style="margin-left: 0;"{% endif %}>
+            {% if not is_public %}
+            <!-- Top Header -->
+            <header class="top-header">
+                <div class="header-left">
+                    <button class="mobile-toggle" id="mobileToggle" onclick="document.getElementById('sidebar').classList.toggle('active')">☰</button>
+                    <div class="search-bar">
+                        <span class="search-icon">🔍</span>
+                        <input type="text" placeholder="Search...">
+                    </div>
+                </div>
+
+                <div class="header-right">
+                    <button class="sound-toggle-btn" onclick="window.toggleRobloxMute()">🔊 Sound</button>
+                    <!-- Notification Bell -->
+                    <div class="bell-container" style="position: relative; margin-right: 1.5rem; font-size: 1.25rem;">
+                        🔔
+                        <span class="bell-badge" style="position: absolute; top: -2px; right: -2px; width: 8px; height: 8px; background: var(--primary); border-radius: 50%;"></span>
+                    </div>
+                    <!-- User Control -->
+                    <div class="navbar-user" id="navUser">
+                        <a href="/login" class="btn btn-sm btn-primary" id="navLoginBtn">Sign In</a>
+                    </div>
+                </div>
+            </header>
+            {% endif %}
+
+            <!-- Market Ticker Tape -->
+            <div class="ticker-wrap" id="tickerTape">
+                <div class="ticker animate-ticker" id="tickerItems">
+                    <span class="ticker-item"><span class="trend-up">▲</span> Python +2.4% ($115k)</span>
+                    <span class="ticker-item"><span class="trend-up">▲</span> MLOps +5.1% ($138k)</span>
+                    <span class="ticker-item"><span class="trend-down">▼</span> Docker -0.8% ($98k)</span>
+                    <span class="ticker-item"><span class="trend-up">▲</span> LLMOps +6.7% ($152k)</span>
+                    <span class="ticker-item"><span class="trend-up">▲</span> Kubernetes +1.9% ($124k)</span>
+                    <span class="ticker-item"><span class="trend-up">▲</span> React +0.5% ($95k)</span>
+                    <span class="ticker-item"><span class="trend-down">▼</span> SQL -0.3% ($88k)</span>
+                    <span class="ticker-item"><span class="trend-up">▲</span> AWS +3.2% ($118k)</span>
+                    <span class="ticker-item"><span class="trend-up">▲</span> Agentic AI +8.4% ($165k)</span>
+                </div>
+            </div>
+
+            <!-- Main Content Area -->
+            <main class="main-content">
+                {% block content %}{% endblock %}
+            </main>
+        </div>
+    </div>
+
+    <!-- Toast Container -->
+    <div class="toast-container" id="toastContainer"></div>
+
+    <!-- Core JS -->
+    <script src="/static/js/app.js"></script>
+    <!-- 3D Scripts -->
+    <script src="/static/js/three_bg.js"></script>
+    <script src="/static/js/tilt_effect.js"></script>
+    <script src="/static/js/roblox_models.js"></script>
+    {% block scripts %}{% endblock %}
+</body>
+</html>

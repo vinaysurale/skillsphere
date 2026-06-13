@@ -1,0 +1,54 @@
+{% extends "base.html" %}
+{% block title %}Career Simulator{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="page-header">
+        <h1>Career Simulator</h1>
+        <p>See how adding new skills impacts your career trajectory</p>
+    </div>
+
+    <div class="grid-2">
+        <!-- Input -->
+        <div class="glass-card animate-in">
+            <h3 class="mb-2">🛠️ Select Future Skills</h3>
+            <p class="text-secondary mb-2" style="font-size: 0.875rem;">Pick skills you plan to learn. The simulator will predict the impact.</p>
+
+            <div class="mb-2">
+                <label class="mb-1" style="font-size: 0.8125rem; font-weight: 600; color: var(--text-secondary);">YOUR CURRENT SKILLS</label>
+                <div id="currentSkillsTags" class="flex flex-wrap gap-sm">
+                    <span class="text-secondary" style="font-size: 0.875rem;">Loading...</span>
+                </div>
+            </div>
+
+            <div class="mb-2">
+                <label class="mb-1" style="font-size: 0.8125rem; font-weight: 600; color: var(--text-secondary);">ADD FUTURE SKILLS</label>
+                <select id="futureSkillSelect" class="form-control mb-1">
+                    <option value="">Select a skill to add...</option>
+                </select>
+                <div id="futureSkillsTags" class="flex flex-wrap gap-sm mb-2"></div>
+            </div>
+
+            <button class="btn btn-primary btn-full btn-lg" onclick="runSimulation()" id="simulateBtn">
+                🚀 Run Simulation
+            </button>
+        </div>
+
+        <!-- Results -->
+        <div class="glass-card animate-in">
+            <h3 class="mb-2">📊 Simulation Results</h3>
+            <div id="simulationResults">
+                <div class="empty-state">
+                    <div class="empty-icon">🚀</div>
+                    <h3>Ready to Simulate</h3>
+                    <p>Select future skills and run the simulation to see your career impact.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script src="/static/js/simulator.js"></script>
+{% endblock %}

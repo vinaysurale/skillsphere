@@ -1,0 +1,21 @@
+# Environment variables (contains secrets)
+.env
+
+# Databases
+*.db
+*.db-journal
+
+# Python caches
+__pycache__/
+**/*.pyc
+.pytest_cache/
+
+# Virtual Environments
+venv/
+ENV/
+env/
+
+# IDE Settings
+.vscode/
+.idea/
+.DS_Store
